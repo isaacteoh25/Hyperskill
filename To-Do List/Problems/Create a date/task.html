@@ -1,0 +1,23 @@
+<b>Create a date</b> <a class=right href="https://hyperskill.org/learn/step/10158">Open on JetBrains Academy</a>
+<br><br>
+<html>
+ <head></head>
+ <body>
+  <p>Below we have a <code class="language-python">Date</code> class. In its <code class="language-python">__init__</code> method we've specified two attributes: <code class="language-python">day</code> and <code class="language-python">month</code>.</p> 
+  <pre><code class="language-python">class Date:
+
+    def __init__(self, day, month):
+        self.day = day
+        self.month = month</code></pre> 
+  <p>On the basis of these attributes, we want to create a new one, a <code class="language-python">date</code> that will represent <code class="language-python">day</code> and <code class="language-python">month</code> string values divided by a slash. For example, for <code class="language-python">14</code> and <code class="language-python">05</code> we should get <code class="language-python">14/05</code>.</p> 
+  <p>This attribute could have been set in the initializer, too. In such a case, however, if we were to change the <code class="language-python">day</code> value, say, to <code class="language-python">15</code>, we would still get <code class="language-python">14/05</code>. What we actually want to get is the following:</p> 
+  <pre><code class="language-python">date_obj = Date(14, 05)
+print(date_object.date)  # 14/05
+
+date_obj.day = 15
+print(date_object.date)  # 15/05</code></pre> 
+  <p>Write the body of the <code class="language-python">date</code> method that will return the values of <code class="language-python">day</code> and <code class="language-python">month</code> separated by a slash and make it accessible as an attribute by placing the correct decorator name above. Note that you don't have to take input or create new class instances.</p> 
+  <p>NOTE: in this case, both <code class="language-python">day</code> and <code class="language-python">month</code> are strings, so they can have leading zeros.</p>
+ </body>
+</html><br><br><font color="gray">Memory limit: 256 MB</font><br><font color="gray">Time limit: 30 seconds</font><br><br>
+<a href="https://hyperskill.org/learn/step/10153">Show topic summary</a>
