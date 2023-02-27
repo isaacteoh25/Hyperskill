@@ -1,0 +1,90 @@
+type: edu
+custom_name: Create & Deploy
+files:
+- name: duskers/duskers.py
+  visible: true
+  text: |
+    # Write your code here
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |-
+    from hstest.stage_test import StageTest
+    from hstest.test_case import TestCase
+    from hstest.check_result import CheckResult
+
+    usernames = "hyper", "hyper_test", "hyper_user"
+    menu_options = "ex", "save", "up", "m"
+
+    class DuskersTest(StageTest):
+        test = 0
+        def generate(self):
+            """This test checks all menu options"""
+            return [TestCase(stdin=f"play\n{usernames[0]}\nyes\n{menu_options[0]}"),
+                    TestCase(stdin=f"play\n{usernames[1]}\nyes\n{menu_options[1]}"),
+                    TestCase(stdin=f"play\n{usernames[2]}\nyes\n{menu_options[2]}"),
+                    TestCase(stdin=f"play\n{usernames[0]}\nyes\n{menu_options[3]}\nback\nm\nmain\nexit"),
+                    TestCase(stdin=f"play\n{usernames[1]}\nyes\n{menu_options[3]}\nsave"),
+                    TestCase(stdin=f"play\n{usernames[2]}\nyes\n{menu_options[3]}\nexit")]
+
+        def check(self, reply, attach):
+            """Things that are tested:
+            1. Robots are indeed 3 'mirror images' of one another, displayed in such a way that more can be added in the future
+            2. Does the game menu have all the options
+            3. Is the whole main menu displayed again after choosing 'main menu' including the title"""
+            if "\n" not in reply:
+                return CheckResult.wrong("Output too short")
+            user_output = reply.split("\n")
+            text = "".join(user_output).lower()
+            if len(user_output) < 9:
+                return CheckResult.wrong("Output too short. Your title should take up exactly 8 lines (including blank space),\n"
+                                         "then the main menu options should be displayed on separate lines")
+            title = "".join(user_output[:8])
+            for count, line in enumerate(user_output):
+                if "menu" in line.lower():
+                    break
+            else:
+                return CheckResult.wrong("Player not given the option between starting the game and returning to main menu.")
+            user_output_part2 = user_output[count:]
+            for count, line in enumerate(user_output_part2):
+                if "║" in line:
+                    break
+            else:
+                return CheckResult.wrong("Please make sure your HUB begins with a '║' character for testing.\nRobot images should start in the line just under this character.")
+            if len(user_output_part2) < count + 9:
+                return CheckResult.wrong("Hub not displayed properly, look at the examples for help.")
+            robots = user_output_part2[count+1: count+8]
+            for line in robots:
+                robot_length = len(line) // 3
+                robot1 = line[:robot_length]
+                robot2 = line[robot_length:2 * robot_length]
+                robot3 = line[2 * robot_length:]
+                if robot1 != robot2 or robot2 != robot3 or robot1 != robot3:
+                    return CheckResult.wrong("Your three robots must be identical and 'stand' right next to each other.")
+            if self.test in (3, 4, 5):
+                for count, line in enumerate(user_output_part2):
+                    if "menu" in line.lower():
+                        break
+                else:
+                    CheckResult.wrong("Menu should display the word 'menu'")
+                user_output_part3 = user_output_part2[count:]
+                text_part3 = "".join(user_output_part3).lower()
+                for option in ["back", "main", "save", "exit"]:
+                    if option not in text_part3:
+                        return CheckResult.wrong("Some menu options are missing.\nInclude the same ones that are in the examples.")
+            if self.test == 3:
+                if title not in text_part3:
+                    print("Main menu should be displayed after choosing that option from the game menu.")
+            self.test += 1
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        DuskersTest('duskers.duskers').run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/136/stages/726/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Mon, 01 Mar 2021 09:31:01 UTC
+record: 3

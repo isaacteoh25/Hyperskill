@@ -1,0 +1,90 @@
+type: edu
+files:
+- name: duskers/duskers.py
+  visible: true
+  text: |
+    # Write your code here
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |-
+    from hstest.stage_test import StageTest
+    from hstest.test_case import TestCase
+    from hstest.check_result import CheckResult
+    from os import path
+    from datetime import datetime
+
+    usernames = "hyper", "hyper_test", "hyper_user"
+    menu_options = "ex", "save", "up", "m"
+    tests = {0: (f"{menu_options[0]}\ns\ns\n2", "7", "10"), 1: (f"{menu_options[0]}\ns\ns\ns\ns\n3", "27", "hyperskill"),
+             2: (f"{menu_options[0]}\ns\n2\nex\n1", "11", "48")}
+
+    class DuskersTest(StageTest):
+        test = 0
+        def generate(self):
+            """Same test basis as in last stage, saving and loading also tested"""
+            return [TestCase(stdin=f"new\n{usernames[0]}\nyes\n{tests[0][0]}\nm\nexit",
+                             args=[tests[0][2], "0", "0", "Old,power,plant/Abandoned,warehouse/Zombie,canteen"]),
+                    TestCase(stdin=f"new\n{usernames[1]}\nyes\n{tests[1][0]}\nm\nsave\n1\nm\nexit",
+                             args=[tests[1][2], "0", "0", "Old,power,plant/Abandoned,warehouse/Zombie,canteen"]),
+                    TestCase(stdin=f"new\n{usernames[2]}\nyes\n{tests[2][0]}\nm\nsave\n1",
+                             args=["20", "0", "0", "Middle,of,nowhere/Ice,desert/Underground,city"]),
+                    TestCase(stdin=f"load\n2\n1\nm\nexit",
+                             args=["20", "0", "0", "Middle,of,nowhere/Ice,desert/Underground,city"])
+                    ]
+
+        def check(self, reply, attach):
+            user_output = reply.split("\n")
+            if "\n" not in reply:
+                return CheckResult.wrong("Output too short")
+            text = "".join(user_output).lower()
+            try:
+                split_point = text.index("menu")
+                end_point = text.index("save")
+            except ValueError:
+                return CheckResult.wrong("Some game options are missing from the output")
+            text_part2 = text[split_point:end_point]
+            if self.test in [0, 1, 2]:
+                if "titanium" not in text_part2:
+                    return CheckResult.wrong("Titanium amount not displayed inside the hub")
+                if "0" not in text_part2:
+                    return CheckResult.wrong("Wrong titanium balance displayed")
+                if self.test == 2:
+                    if tests[self.test][1] not in text and tests[self.test][2] not in text:
+                        return CheckResult.wrong("Something went wrong with the exploration.\n"
+                                                 "Make sure the titanium amount from exploration is based on the seed")
+                else:
+                    if tests[self.test][1] not in text:
+                        return CheckResult.wrong("Something went wrong with the exploration.\n"
+                                                 "Make sure the titanium amount from exploration is based on the seed")
+                    split_point2 = text.index(tests[self.test][1])
+                    if tests[self.test][1] not in text[split_point2 + 2:]:
+                        return CheckResult.wrong("New titanium balance not displayed/updated")
+            for file_name in ["save_file.txt", "high_scores.txt"]:
+                if not path.isfile(file_name):
+                    return CheckResult.wrong("Some file is missing from your program.")
+            if self.test == 3:
+                if "59" not in text:
+                    return CheckResult.wrong("Wrong titanium balance while loading game.")
+                else:
+                    split_point3 = text.index("59")
+                    text_part3 = text[split_point3 + 2:]
+                if str(datetime.today())[:16] not in text:
+                    return CheckResult.wrong("Date/time info incorrect in save file")
+                if "empty" not in text:
+                    return CheckResult.wrong("No save slot marked as empty found.\n"
+                                             "Please make sure that if there is not save in a given slot display it as empty")
+                if "59" not in text_part3:
+                    return CheckResult.wrong("Wrong titanium balance while loading game.")
+                if usernames[2] not in text_part3:
+                    return CheckResult.wrong("Player not greeted after loading the game")
+            self.test += 1
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        DuskersTest('duskers.duskers').run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/136/stages/728/implement#comment
+status: Unchecked
+record: -1

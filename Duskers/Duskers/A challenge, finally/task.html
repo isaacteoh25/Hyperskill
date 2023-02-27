@@ -1,0 +1,376 @@
+<h2>Description</h2>
+
+<p>This is the final stage of the project where we will add some finishing touches to the game. The game is not very challenging at the moment: let's add enemy encounters! How do you know if you're going to encounter an enemy at a given location? Well... you don't. You can buy an upgrade to see the <strong>probability </strong>of encountering one. Every enemy encounter means one of your robots had to stay back and fight the enemy, so the player loses it, but the remaining robots are still able to get away with the loot. The game ends when you lose all of your robots. You can also buy an upgrade to see how much titanium you will earn from each found location. Of course, you can also buy more robots if you can afford them.</p>
+
+<p>We will also polish our game by adding high scores stored in <code class="java">high_scores.txt</code> and a help screen with information about the game and the controls.</p>
+
+<p><strong>Optional after project completion</strong></p>
+
+<p>After you complete this project, you are free to keep experimenting with changing/adding different game mechanics to make the game more interesting and enjoyable. You might want to experiment with the encounter rate to make the game more balanced, or you could go even further and implement a battle system, giving your robots and the enemy HP, attack and defense stats, interactive battles, etc. As they say, the sky is the limit!</p>
+
+<h2>Objectives</h2>
+
+<ol>
+	<li>Now each location should also have an encounter rate between 0% and 100%. The higher the probability, the more likely that an enemy encounter is going to happen. After the project, you can experiment with how this value is set to make the game better. For now, we will give you a simple option to implement.
+	<p>a. During the searching, generate randomly the titanium amount and the encounter rate (a number between 0 and 1).<br>
+	b. If the encounter rate is visible, display that number (encounter rate) as a percentage rounded to the nearest whole number, for example, 0.6843... --&gt; 68%. For the calculations, however, keep the original unrounded number.<br>
+	c. If the player chooses to explore that location, generate a second random number between 0 and 1.<br>
+	d. If the second number is smaller than the first number, then the Encounter happens; if the second number is bigger, then there is no encounter.</p>
+	</li>
+	<li>After each enemy encounter, one robot is lost. Make sure those changes are reflected in the HUB after each encounter.</li>
+	<li>The upgrade shop should include Titanium Scan for 500 titanium, Enemy Encounter Scan for 1500, and New Robot for 10000. The purchase is only possible if a player has enough titanium to buy the upgrades. Make sure these upgrades don't disappear after saving and loading the game.</li>
+	<li>Scan results should have the upgrade information displayed next to them.</li>
+	<li>If all the robots are lost, the game is over, and the score is saved to <code class="java">high_scores.txt</code> if it is among the 10 highest scores.</li>
+	<li>The top 10 scores and the players' names should be displayed on the high scores screen which can be accessed from the main menu. Make sure that if such a file doesn't exist, it is created before the player can access that screen.</li>
+	<li>As a finishing touch, add some help text (accessed from the main menu) to tell the player what the game is about and how to control the game.</li>
+</ol>
+
+<p>Note: for this stage, please have animation turned off by default.</p>
+
+<h2>Examples</h2>
+
+<p>The greater-than symbol followed by a space (<code class="java">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+
+<p><strong>Example 1:</strong> <em>Upgrades and their effects, enemy encounter</em></p>
+
+<pre><code class="language-no-highlight">║════════════════════════════════════════════════════════════════════════════════║
+                                                            
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬   
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬   
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬       
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬      
+     ╬       ╬           ╬       ╬           ╬       ╬      
+
+  Titanium: 3023
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: 
+&gt; up
+                         ║══════════════════════════════║                         
+                         ║         UPGRADE STORE        ║                         
+                         ║                        Price ║                         
+                         ║[1] Titanium Scan         500 ║                         
+                         ║[2] Enemy Encounter Scan 1500 ║                         
+                         ║[3] New Robot           10000 ║                         
+                         ║                              ║                         
+                         ║[Back]                        ║                         
+                         ║══════════════════════════════║                         
+
+
+Your command: 
+&gt; 1
+Purchase successful. You can now see how much titanium you can get from each found location.
+║════════════════════════════════════════════════════════════════════════════════║
+                                                            
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬   
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬   
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬       
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬      
+     ╬       ╬           ╬       ╬           ╬       ╬      
+
+  Titanium: 2523
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: 
+&gt; ex
+Searching
+[1] High street Titanium: 12
+
+[S] to continue searching
+
+Your command: 
+&gt; s
+Searching
+[1] High street Titanium: 12
+[2] Green park Titanium: 53
+
+[S] to continue searching
+
+Your command: 
+&gt; 2
+Deploying robots
+Enemy encounter
+Green park was explored successfully, 1 robot lost..
+Acquired 53 lumps of titanium
+║════════════════════════════════════════════════════════════════════════════════║
+                                        
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬   
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬   
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬       
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬      
+     ╬       ╬           ╬       ╬      
+
+  Titanium: 2576
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: 
+&gt; up
+                         ║══════════════════════════════║                         
+                         ║         UPGRADE STORE        ║                         
+                         ║                        Price ║                         
+                         ║[1] Titanium Scan         500 ║                         
+                         ║[2] Enemy Encounter Scan 1500 ║                         
+                         ║[3] New Robot           10000 ║                         
+                         ║                              ║                         
+                         ║[Back]                        ║                         
+                         ║══════════════════════════════║                         
+
+
+Your command: 
+&gt; 2
+Purchase successful. You will now see how likely you will encounter an enemy at each found location.
+║════════════════════════════════════════════════════════════════════════════════║
+                                        
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬   
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬   
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬       
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬      
+     ╬       ╬           ╬       ╬      
+
+  Titanium: 1076
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: 
+&gt; ex
+Searching
+[1] Green park Titanium: 24 Encounter rate: 47%
+
+[S] to continue searching
+
+Your command: 
+&gt; s
+Searching
+[1] Green park Titanium: 24 Encounter rate: 47%
+[2] High street Titanium: 89 Encounter rate: 46%
+
+[S] to continue searching
+
+Your command: 
+&gt; s
+Nothing more in sight.
+       [Back]
+
+Your command: 
+&gt; 2
+Deploying robots
+High street was explored successfully, with no damage taken.
+Acquired 89 lumps of titanium
+║════════════════════════════════════════════════════════════════════════════════║
+                                        
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬   
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬   
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬       
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬      
+     ╬       ╬           ╬       ╬      
+
+  Titanium: 1165
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: </code></pre>
+
+<p><strong>Example 2:</strong> <em>An additional robot</em></p>
+
+<pre><code class="language-no-highlight">║════════════════════════════════════════════════════════════════════════════════║
+                                                            
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬   
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬   
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬       
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬      
+     ╬       ╬           ╬       ╬           ╬       ╬      
+
+  Titanium: 30230
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: 
+&gt; up
+                         ║══════════════════════════════║                         
+                         ║         UPGRADE STORE        ║                         
+                         ║                        Price ║                         
+                         ║[1] Titanium Scan         500 ║                         
+                         ║[2] Enemy Encounter Scan 1500 ║                         
+                         ║[3] New Robot           10000 ║                         
+                         ║                              ║                         
+                         ║[Back]                        ║                         
+                         ║══════════════════════════════║                         
+
+
+Your command: 
+&gt; 3
+Purchase successful. You now have an additional robot
+║════════════════════════════════════════════════════════════════════════════════║
+                                                                                
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬   
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬   
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬       
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬      
+     ╬       ╬           ╬       ╬           ╬       ╬           ╬       ╬      
+
+  Titanium: 20230
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: 
+</code></pre>
+
+<p><strong>Example 3:</strong> <em>High scores and game over</em></p>
+
+<pre><code class="language-no-highlight">
+██████╗ ██╗   ██╗███████╗██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝
+██║  ██║██║   ██║███████╗█████╔╝ █████╗  ██████╔╝███████╗
+██║  ██║██║   ██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗╚════██║
+██████╔╝╚██████╔╝███████║██║  ██╗███████╗██║  ██║███████║
+╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+
+[New]  Game
+[Load] Game
+[High] Scores
+[Help]
+[Exit]
+
+Your command: 
+&gt; high
+
+	HIGH SCORES
+
+(1) da_test 8073
+(2) da_test 8023
+(3) da_test 8004
+(4) da_test 8000
+(5) da_test 8000
+(6) da_test 8000
+(7) da_test 8000
+(8) da_test 8000
+(9) da_test 8000
+(10) da_test 8000
+
+	[Back]
+
+Your command: 
+&gt; back
+
+██████╗ ██╗   ██╗███████╗██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝
+██║  ██║██║   ██║███████╗█████╔╝ █████╗  ██████╔╝███████╗
+██║  ██║██║   ██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗╚════██║
+██████╔╝╚██████╔╝███████║██║  ██╗███████╗██║  ██║███████║
+╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+
+[New]  Game
+[Load] Game
+[High] Scores
+[Help]
+[Exit]
+
+Your command: 
+&gt; load
+   Select save slot:
+    [1] david Titanium: 10000 Robots: 1 Last save: 2020-09-25 10:11 Upgrades: enemy_info
+    [2] empty
+    [3] empty
+
+Your command: 
+&gt; 1
+        ║══════════════════════════════║
+        ║    GAME LOADED SUCCESSFULLY  ║
+        ║══════════════════════════════║
+ Welcome back, commander david!
+║════════════════════════════════════════════════════════════════════════════════║
+                    
+  ╬   ╬╬╬╬╬╬╬   ╬   
+  ╬╬╬╬╬     ╬╬╬╬╬   
+      ╬╬╬╬╬╬╬       
+     ╬╬╬   ╬╬╬      
+     ╬       ╬      
+
+  Titanium: 10000
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: 
+&gt; ex
+Searching.
+[1] Old beach bar Encounter rate: 45%
+
+[S] to continue searching
+
+Your command: 
+&gt; s
+Searching.
+[1] Old beach bar Encounter rate: 45%
+[2] Nuclear power plant wreckage Encounter rate: 3%
+
+[S] to continue searching
+
+Your command: 
+&gt; s
+Searching...
+[1] Old beach bar Encounter rate: 45%
+[2] Nuclear power plant wreckage Encounter rate: 3%
+[3] Nuclear power plant wreckage Encounter rate: 74%
+
+[S] to continue searching
+
+Your command: 
+&gt; 3
+Deploying robots...
+Enemy encounter!!!
+Mission aborted, the last robot lost...
+        ║══════════════════════════════║
+        ║          GAME OVER!          ║
+        ║══════════════════════════════║
+
+██████╗ ██╗   ██╗███████╗██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝
+██║  ██║██║   ██║███████╗█████╔╝ █████╗  ██████╔╝███████╗
+██║  ██║██║   ██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗╚════██║
+██████╔╝╚██████╔╝███████║██║  ██╗███████╗██║  ██║███████║
+╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+
+[New]  Game
+[Load] Game
+[High] Scores
+[Help]
+[Exit]
+
+Your command: 
+&gt; high
+
+	HIGH SCORES
+
+(1) hyper 10000
+(2) da_test 8073
+(3) da_test 8023
+(4) da_test 8004
+(5) da_test 8000
+(6) da_test 8000
+(7) da_test 8000
+(8) da_test 8000
+(9) da_test 8000
+(10) da_test 8000
+
+	[Back]
+
+Your command: </code></pre>

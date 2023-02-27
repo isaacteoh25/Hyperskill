@@ -1,0 +1,203 @@
+<h2>Theory</h2>
+
+<p>Before you can start implementing the stage, it might be a good idea to go over some theory.</p>
+
+<p>In order to check if a file exists in a given directory, we can use the <code class="language-python">os.path</code> module. The syntax is as follows:</p>
+
+<pre><code class="language-python">os.path.isfile(path)</code></pre>
+
+<p>It returns a boolean value. We can use a relative path here to refer to a file in the same directory as our main script.</p>
+
+<p>For example, <code class="language-python">os.path.isfile("save_file.txt")</code> looks for a file named <em>save_file.txt</em> in the same folder as your script. If such a file, exists it returns <code class="language-python">True</code>. Make sure you implement it this way for the tests.</p>
+
+<h2>Description</h2>
+
+<p>In this stage, we will take care of something very important in games: saving the game to a file and loading it. The program will also record the date and time of the save. The data mechanism will be very simple: 1 line = 1 save slot. The line should contain all the necessary information to load the game again at the same point it was saved.</p>
+
+<h2>Objectives</h2>
+
+<ol>
+	<li>The save file should be named <em>save_file.txt</em>. Make sure the program checks that the file exists in the same directory as the program; if not, it should be created.</li>
+	<li>We will use 3 save slots. If there is no data in a save slot, it should display <code class="language-python">empty</code>. The save slots are numbered, and the player enters the number of the slot they want to load or save to. Make sure that the player is not able to load an empty slot! All 3 slots should be saved in a single file with all the necessary information to restore the game in the exact same place after loading. This implies saving the player's name, the current <code class="language-python">Titanium</code> balance, and <code class="language-python">Robot</code> count. It should also contain the current time and date of saving in the following format: <code class="language-python">YYYY-MM-DD hh:mm</code>. For example:  <code class="language-python">2020-09-24 20:05</code>.</li>
+	<li>Display a small dialog box if saving/loading was successful.</li>
+	<li>Make sure you also add the saving functionality to the <code class="language-python">save and exit</code> option.</li>
+	<li>You should now replace <code class="language-python">Play</code> with <code class="language-python">New game</code> and <code class="language-python">Load game</code> options in the menu.</li>
+</ol>
+
+<h2>Examples</h2>
+
+<p>The greater-than symbol followed by a space (<code class="language-python">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code class="language-no-highlight">
+██████╗ ██╗   ██╗███████╗██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝
+██║  ██║██║   ██║███████╗█████╔╝ █████╗  ██████╔╝███████╗
+██║  ██║██║   ██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗╚════██║
+██████╔╝╚██████╔╝███████║██║  ██╗███████╗██║  ██║███████║
+╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+
+[New]  Game
+[Load] Game
+[High] Scores
+[Help]
+[Exit]
+
+Your command:
+&gt; new
+
+Enter your name:
+&gt; hyper
+
+Greetings, commander hyper!
+Are you ready to begin?
+[Yes] [No] Return to Main[Menu]
+
+Your command:
+&gt; yes
+║════════════════════════════════════════════════════════════════════════════════║
+
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬
+     ╬       ╬           ╬       ╬           ╬       ╬
+
+  Titanium: 0
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command:
+&gt; save
+   Select save slot:
+    [1] empty
+    [2] empty
+    [3] empty
+
+Your command:
+&gt; 1
+        ║══════════════════════════════║
+        ║    GAME SAVED SUCCESSFULLY   ║
+        ║══════════════════════════════║
+║════════════════════════════════════════════════════════════════════════════════║
+
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬
+     ╬       ╬           ╬       ╬           ╬       ╬
+
+  Titanium: 0
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command:
+&gt; m
+                             ║════════════════════════║
+                             ║           MENU         ║
+                             ║                        ║
+                             ║[Back] to game          ║
+                             ║ Return to [Main] Menu  ║
+                             ║[Save] and exit         ║
+                             ║[Exit] game             ║
+                             ║════════════════════════║
+
+Your command:
+&gt; main
+
+██████╗ ██╗   ██╗███████╗██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝
+██║  ██║██║   ██║███████╗█████╔╝ █████╗  ██████╔╝███████╗
+██║  ██║██║   ██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗╚════██║
+██████╔╝╚██████╔╝███████║██║  ██╗███████╗██║  ██║███████║
+╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+
+[New]  Game
+[Load] Game
+[High] Scores
+[Help]
+[Exit]
+
+Your command:
+&gt; load
+   Select save slot:
+    [1] hyper Titanium: 0 Robots: 3 Last save: 2020-09-24 20:05
+    [2] empty
+    [3] empty
+
+Your command:
+&gt; 1
+        ║══════════════════════════════║
+        ║    GAME LOADED SUCCESSFULLY  ║
+        ║══════════════════════════════║
+ Welcome back, commander hyper!
+║════════════════════════════════════════════════════════════════════════════════║
+
+  ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬     ╬   ╬╬╬╬╬╬╬   ╬
+  ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬     ╬╬╬╬╬
+      ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬             ╬╬╬╬╬╬╬
+     ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬           ╬╬╬   ╬╬╬
+     ╬       ╬           ╬       ╬           ╬       ╬
+
+  Titanium: 0
+║════════════════════════════════════════════════════════════════════════════════║
+║                  [Ex]plore                          [Up]grade                  ║
+║                  [Save]                             [M]enu                     ║
+║════════════════════════════════════════════════════════════════════════════════║
+
+Your command: </code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code class="language-no-highlight">
+██████╗ ██╗   ██╗███████╗██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝
+██║  ██║██║   ██║███████╗█████╔╝ █████╗  ██████╔╝███████╗
+██║  ██║██║   ██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗╚════██║
+██████╔╝╚██████╔╝███████║██║  ██╗███████╗██║  ██║███████║
+╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+
+[New]  Game
+[Load] Game
+[High] Scores
+[Help]
+[Exit]
+
+Your command:
+&gt; load
+   Select save slot:
+    [1] empty
+    [2] empty
+    [3] empty
+
+Your command:
+&gt; 1
+Empty slot!
+
+   Select save slot:
+    [1] empty
+    [2] empty
+    [3] empty
+
+Your command:
+&gt; back
+
+██████╗ ██╗   ██╗███████╗██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝
+██║  ██║██║   ██║███████╗█████╔╝ █████╗  ██████╔╝███████╗
+██║  ██║██║   ██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗╚════██║
+██████╔╝╚██████╔╝███████║██║  ██╗███████╗██║  ██║███████║
+╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+
+[New]  Game
+[Load] Game
+[High] Scores
+[Help]
+[Exit]
+
+Your command: </code></pre>
