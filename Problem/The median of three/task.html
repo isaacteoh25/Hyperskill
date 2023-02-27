@@ -1,0 +1,30 @@
+<h2>The median of three</h2>
+<html>
+ <head></head>
+ <body>
+  <p style="text-align: center;"></p>
+  <p>In the described partition procedure, we choose the leftmost element of a list as a pivot. In some cases, for instance, when the input list is already sorted, this approach may lead to the worst-case scenario.</p> 
+  <p>To address this limitation, we need to change the way we choose a pivot element. One possible modification is called <strong>the median of three</strong>. The idea is to consider the first, the middle, and the last element of a list and use the median of these elements as a pivot. Although even in this case the worst-case scenario is possible, this modification gives $O(n \log n)$ time complexity for sorted lists.</p> 
+  <p>Your task here is to implement this modification of the partition procedure.</p> 
+  <p>You need:</p> 
+  <ul> 
+   <li>to implement a method <code class="java">choose_median()</code> that returns the <strong>index</strong> of the median element (the chosen pivot); </li> 
+   <li>to print the index of the pivot chosen at the previous step;</li> 
+   <li>to modify the provided <code class="java">partition()</code> method so that it can work with the chosen pivot;</li> 
+   <li>to print the list after the first partition.</li> 
+  </ul> 
+  <p><strong>Input</strong>: one line containing a list of integer numbers separated by spaces.</p> 
+  <p><strong>Output</strong>: on the first line, the index of the pivot element chosen by the "median of three" method. On the second line, the input list after applying the modified partition procedure.</p> 
+  <p>Note that if the size of a list is even, there are two ways to choose the middle element. To avoid ambiguity, choose an element with a <strong>smaller index</strong> in this case.</p> 
+  <p><button class="btn-sm btn-outline-secondary" onclick="getElementById('hint-1721').style.display='inline'"> Hint </button> </p>
+  <div id="hint-1721" style="display:none;">
+   In the 
+   <code class="java">partition()</code> method provided in the theory section, the pivot element is the first element. In the version below, the pivot is passed as the argument to the 
+   <code class="java">partition</code> method (after it is calculated in the 
+   <code class="java">choose_median</code> method. You can use the provided partition method without any further modifications if you swap the chosen pivot with the first element at the very beginning of the 
+   <code class="java">partition</code> method.
+  </div>
+  <p></p>
+ </body>
+</html><br><b>Sample Input:</b><br><pre><code class="language-no-highlight">30 60 50 20 40<br></code></pre><br><b>Sample Output:</b><br><pre><code class="language-no-highlight">4<br>30 20 40 60 50<br></code></pre><br><br><b>Sample Input:</b><br><pre><code class="language-no-highlight">60 10 30 20<br></code></pre><br><b>Sample Output:</b><br><pre><code class="language-no-highlight">3<br>10 20 30 60<br></code></pre><br><br><br><font color="gray">Memory limit: 256 MB</font><br><font color="gray">Time limit: 3 seconds</font><br><br>
+<a href="https://hyperskill.org/learn/step/7792">Show topic summary</a>

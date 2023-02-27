@@ -1,0 +1,16 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: |-
+    import pandas as pd
+
+    def merge_data(user_info, emails):
+        pass
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/12354#comment
+status: Unchecked
+feedback:
+  message: Please, login to JetBrains Academy to check the task
+  time: Fri, 15 Apr 2022 01:53:36 UTC
+record: -1

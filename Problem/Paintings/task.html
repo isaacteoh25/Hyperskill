@@ -1,0 +1,20 @@
+<b>Paintings</b> <a class=right href="https://hyperskill.org/learn/step/7569">Open on JetBrains Academy</a>
+<br><br>
+<html>
+ <head></head>
+ <body>
+  <p>Alice has a collection of $n$ paintings, each having width equal to $w$ and height equal to $h$. Alice wants to decorate her house with the paintings. To do that, she decided to buy a square frame for all the paintings and hang them on the wall inside the frame.</p> 
+  <p>In the store, there is a number of square frames available. The lengths of the frame sides are stored in a sorted list <code class="java">frames</code>. You need to find the frame with the minimum size inside which all the paintings can be hanged. The output of your code should be <strong>the index</strong> of that frame in the list <code class="java">frames</code>. </p> 
+  <p>Note that the paintings can NOT be rotated. Also, two different paintings should not intersect.</p> 
+  <p><strong>Input:</strong> three integer numbers separated by spaces: $n$ — the number of paintings, $w$ — the width of each painting, and $h$ — the height of each painting.</p> 
+  <p><strong>Output:</strong> the index of the suitable frame with the minimum size. It is guaranteed that there is an appropriate frame in the list for all input cases.</p> 
+  <p><strong>Example.</strong></p> 
+  <p>Suppose,<code class="java">frames = [1, 3, 5, 9, 10]</code> (NOT the actual value of this list!). We have $3$ paintings with dimensions $3$x$4$. Out of all these paintings, the smallest square frame that can fit all these paintings has a size of $9$. So, the output should be the index of this frame in the list — $3$.</p> 
+  <p><button class="btn-sm btn-outline-secondary" onclick="getElementById('hint-1430').style.display='inline'"> Hint </button> </p>
+  <div id="hint-1430" style="display:none;">
+   You can look into the combined area of all paintings: which square covers this combined area?
+  </div>
+  <p></p>
+ </body>
+</html><br><b>Sample Input:</b><br><pre><code class="language-no-highlight">3 3 4<br></code></pre><br><b>Sample Output:</b><br><pre><code class="language-no-highlight">3</code></pre><br><br><br><font color="gray">Memory limit: 256 MB</font><br><font color="gray">Time limit: 1 second</font><br><br>
+<a href="https://hyperskill.org/learn/step/7562">Show topic summary</a>
