@@ -1,0 +1,16 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: |-
+    import re
+
+    # define regex template
+    template = ''
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/10040#comment
+status: Unchecked
+feedback:
+  message: Please, login to JetBrains Academy to check the task
+  time: Fri, 15 Apr 2022 01:52:42 UTC
+record: -1
