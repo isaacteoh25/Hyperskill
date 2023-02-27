@@ -1,8 +1,0 @@
-import pandas as pd
-
-peng_dict = {'species': {0: 'Adelie', 1: 'Adelie', 2: 'Adelie', 3: 'Adelie', 4: 'Adelie', 5: 'Adelie', 6: 'Adelie', 7: 'Adelie', 8: 'Adelie', 9: 'Adelie'}, 'island': {0: 'Torgersen', 1: 'Torgersen', 2: 'Torgersen', 3: 'Torgersen', 4: 'Torgersen', 5: 'Torgersen', 6: 'Torgersen', 7: 'Torgersen', 8: 'Torgersen', 9: 'Torgersen'}, 'bill_length_mm': {0: 39.1, 1: 39.5, 2: 40.3, 3: None, 4: 36.7, 5: 39.3, 6: 38.9, 7: 39.2, 8: 34.1, 9: 42.0}, 'bill_depth_mm': {0: 18.7, 1: 17.4, 2: 18.0, 3: None, 4: 19.3, 5: 20.6, 6: 17.8, 7: 19.6, 8: 18.1, 9: 20.2}, 'flipper_length_mm': {0: 181.0, 1: 186.0, 2: 195.0, 3: None, 4: 193.0, 5: 190.0, 6: 181.0, 7: 195.0, 8: 193.0, 9: 190.0}, 'body_mass_g': {0: 3750.0, 1: 3800.0, 2: 3250.0, 3: None, 4: 3450.0, 5: 3650.0, 6: 3625.0, 7: 4675.0, 8: 3475.0, 9: 4250.0}, 'sex': {0: 'MALE', 1: 'FEMALE', 2: 'FEMALE', 3: None, 4: 'FEMALE', 5: 'MALE', 6: 'FEMALE', 7: 'MALE', 8: None, 9: None}}
-
-penguins_df = pd.DataFrame(peng_dict)
-
-# your code here
-selecting_task = penguins_df[['species', 'body_mass_g','sex']]
