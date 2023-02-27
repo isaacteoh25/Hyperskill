@@ -1,0 +1,48 @@
+type: edu
+files:
+- name: arithmetic.py
+  visible: true
+  text: |
+    # write your code here
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |
+    from hstest import *
+
+    CheckResult.correct = lambda: CheckResult(True, '')
+    CheckResult.wrong = lambda feedback: CheckResult(False, feedback)
+
+
+    class ExamTest(StageTest):
+        @dynamic_test
+        def test_sum(self):
+            pr = TestedProgram()
+            pr.start()
+            output = pr.execute("5 + 2").lower().strip()
+            return CheckResult(output == "7", 'Wrong result found for "+" operation.')
+
+        @dynamic_test
+        def test_mult(self):
+            pr = TestedProgram()
+            pr.start()
+            output = pr.execute("11 * 3").lower().strip()
+            return CheckResult(output == "33", 'Wrong result found for "*" operation.')
+
+        @dynamic_test
+        def test_substraction(self):
+            pr = TestedProgram()
+            pr.start()
+            output = pr.execute("10 - 3").lower().strip()
+            return CheckResult(output == "7", 'Wrong result found for "-" operation.')
+
+
+    if __name__ == '__main__':
+        ExamTest().run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/173/stages/893/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Mon, 05 Apr 2021 02:11:54 UTC
+record: 1
