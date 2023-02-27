@@ -1,0 +1,103 @@
+<h2>Theory</h2>
+
+<p>Have you ever wondered how search engines like Google sort pages that contain your query? Does it go through every Internet page looking for the right words? In reality, any search engine utilizes a database. This database links a search unit and all documents where it appears. This means that every text piece in this database should be converted into these search units, <strong>tokens</strong>. Each token must be assigned with an index by which it can be later found in the text. The index contains a document name, a line number, and the starting and ending token indexes, in other words, tags that mark the start and the end of a token. Then, you will need to take care of the token context to show it together with your query. Finally, the engine starts looking through the database for the necessary words and phrases to return the result.</p>
+
+<p>To create your own search engine, you need to go through the following steps:</p>
+
+<ol>
+	<li>Split a text into tokens,</li>
+	<li>Assign an index to each token,</li>
+	<li>Consider the context,</li>
+	<li>Write the search method.</li>
+</ol>
+
+<p>Now, get ready to write your own search engine!</p>
+
+<h2>Description</h2>
+
+<p>In this stage, you need to split a text into tokens with the help of a <strong>tokenizer</strong> that you need to write. Before tokenizing, the program should open a text file, read it line by line and find tokens. Tokens are text chunks: spaces, words, numbers, and punctuation marks. Words and numbers are the basic tokens; they are the foundations of our quires, after all!</p>
+
+<p>We will need the tokenizer to create a database in the next stage. So, we need to remember the positions of each token in the text. For now, store the starting index of a token with the token itself.</p>
+
+<p>There can be millions of documents in the database. It is impractical to store the received tokens in memory. Instead, the tokenizer should process texts on-the-fly. Once a text is provided, it should generate tokens one after another as they occur in the text. So it may be a good idea a tokenizer that generates tokens in series. The tokenizer should read a text character by character and print a token as soon as the current token has ended. By <strong>token</strong><em>,</em> we mean a sequence of characters of the same type, for example, "digit" type numbers, "alpha" type letters, "punct" type punctuation marks and space characters with the "space" type. Add characters to the same token as long as they are of the same type, otherwise, start a new token. For example, for the <code class="language-python">user777</code> string, the tokenizer would return two tokens: <code class="language-python">user</code> and <code class="language-python">777</code>. For the <code class="language-python">super-girl</code> string, we would also have two tokens:  <code class="language-python">super</code> and <code class="language-python">girl</code>.</p>
+
+<p><div class="alert alert-primary">Only sequences of alphabetic and digit characters can be tokens, disregard all other characters. In order to check the character type, use the following built-in functions: <code class="language-python">isdigit()</code> , <code class="language-python">isspace()</code>, and <code class="language-python">isalpha()</code>.  The <a target="_blank" href="https://docs.python.org/3/library/unicodedata.html" rel="noopener noreferrer nofollow">Unicodedata</a> module can help you with punctuation marks.</div></p>
+
+<h2>Objectives</h2>
+
+<p>Open a text file, read it, and apply the tokenizer to each text line.</p>
+
+<p>Your tokenizer should:</p>
+
+<ol>
+	<li>Look at a string of symbols character by character;</li>
+	<li>Pay attention to alpha and digit tokens only;</li>
+	<li>Consider character sequences of the same type as one token, remember its starting index;</li>
+	<li>Once the character type is changed, print the token instance together with its type and its starting index;</li>
+	<li>Print the tokens;</li>
+</ol>
+
+<p>The results are crucial for the next stages. You may want to write your own tests in order to check the code. Make sure that your program can tokenize texts with different symbols in random order, separate words and numbers from punctuation marks, and assign correct starting positions to the tokens. Don't forget to check your program with an empty input. In this case, it should <code class="language-python">None</code> as а result.</p>
+
+<p>For now,  print the tokens in the following manner: <code class="language-python">{token as a string}_{token type as a string: alpha or digit}_{token starting index}</code>, see the examples below. </p>
+
+<h2>Examples</h2>
+
+<p>The greater-than symbol followed by a space (<code class="language-python">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+
+<p><strong>Example 1: </strong><em>Text begins with space and ends with a punctuation mark</em></p>
+
+<p>Input file contents:  <code class="language-python">In her face were too sharply blended the delicate features of her mother.</code></p>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">&gt; testfile1.txt
+In_alpha_1
+her_alpha_4
+face_alpha_8
+were_alpha_13
+too_alpha_18
+sharply_alpha_22
+blended_alpha_30
+the_alpha_38
+delicate_alpha_42
+features_alpha_51
+of_alpha_60
+her_alpha_63
+mother_alpha_67</code></pre>
+
+<p><strong>Example 2</strong>: <em>Text begins with letters</em></p>
+
+<p>Input file content: <code class="language-python">She made @ pretty picture...</code></p>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">&gt; testfile2.txt
+She_alpha_0
+made_alpha_4
+pretty_alpha_11
+picture_alpha_18</code></pre>
+
+<p><strong>Example 3</strong>: <em>Text has no spaces and ends with a number</em></p>
+
+<p>Input file content: <code class="language-python">Her!!!eyes^were%her|own)))123</code></p>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">&gt; testfile3.txt
+Her_alpha_0
+eyes_alpha_6
+were_alpha_11
+her_alpha_16
+own_alpha_20
+123_digit_26</code></pre>
+
+<p><strong>Example 4</strong>: <em>An empty string</em></p>
+
+<p>Input file content: An empty file</p>
+
+<p>Output:</p>
+
+<pre><code class="language-python">&gt;
+
+</code></pre>

@@ -1,0 +1,12 @@
+{
+    "flashcards": {
+        "casa": {
+            "def": "parada",
+            "mistake_number": 1
+        },
+        "carro": {
+            "def": "anda",
+            "mistake_number": 0
+        }
+    }
+}

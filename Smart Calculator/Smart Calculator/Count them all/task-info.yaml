@@ -1,0 +1,445 @@
+type: edu
+custom_name: stage3
+files:
+- name: tests.py
+  visible: false
+  text: |
+    from hstest.stage_test import *
+    from hstest.test_case import TestCase
+
+
+    class CalcTest(StageTest):
+        on_exit = 0
+
+        def generate(self) -> List[TestCase]:
+            return [
+                TestCase(stdin=["/help", self.test_1_1, self.test_1_2, self.test_1_3,
+                                self.test_1_4, self.test_1_5, self.test_1_6, self.test_1_7]),
+                TestCase(stdin=["", self.test_2_1, self.test_2_2, self.test_2_3, self.test_2_4,
+                                self.test_2_5, self.test_2_6, self.test_2_7])]
+
+        # test of help command
+        def test_1_1(self, output):
+            output = str(output).lower().strip()
+            if len(output.split(" ")) < 1:
+                return CheckResult.wrong("It seems like there was no any \"help\" message.")
+            return "123 321"
+
+        # tests of the previous stage ##############################################
+        # sum of two positive
+        def test_1_2(self, output):
+            output = str(output).lower().strip()
+            if output != "444":
+                return CheckResult.wrong("The program cannot sum two positive numbers")
+            return "-456 390"
+
+        # sum of positive and negative
+        def test_1_3(self, output):
+            output = str(output).lower().strip()
+            if output != "-66":
+                return CheckResult.wrong("The program cannot sum negative and positive number")
+            return "264 -73"
+
+        # sum of positive and negative
+        def test_1_4(self, output):
+            output = str(output).lower().strip()
+            if output != "191":
+                return CheckResult.wrong("The program cannot sum positive and negative number")
+            return "2 -2"
+
+        # zero sum
+        def test_1_5(self, output):
+            output = str(output).lower().strip()
+            if output != "0":
+                return CheckResult.wrong("The problem when sum is equal to 0 has occurred")
+            return "99"
+
+        # input of one positive number
+        def test_1_6(self, output):
+            output = str(output).lower().strip()
+            if output != "99":
+                return CheckResult.wrong("The program printed not the same number that was entered.")
+            return "-221"
+
+        # input of one negative number
+        def test_1_7(self, output):
+            output = str(output).lower().strip()
+            if output != "-221":
+                return CheckResult.wrong("The program printed not the same number that was entered.")
+            self.on_exit = 1
+            return "/exit"
+
+        # sum of several numbers (this stage) ######################################
+        # only positive
+        def test_2_1(self, output):
+            output = str(output)
+            if len(output) != 0:
+                return CheckResult.wrong("Incorrect response to an empty string. "
+                                         "The program should not print anything.")
+            return "4 6 8"
+
+        # positive and negative
+        def test_2_2(self, output):
+            output = str(output).lower().strip()
+            if output != "18":
+                return CheckResult.wrong("The program cannot sum more than two numbers.")
+            return "2 -3 -4"
+
+        # only negative
+        def test_2_3(self, output):
+            output = str(output).lower().strip()
+            if output != "-5":
+                return CheckResult.wrong("Incorrect sum of positive and negative numbers.")
+            return "-8 -7 -1"
+
+        # only negative
+        def test_2_4(self, output):
+            output = str(output).lower().strip()
+            if output != "-16":
+                return CheckResult.wrong("Incorrect sum of three negative numbers.")
+            return "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"
+
+        # a big amount of numbers
+        def test_2_5(self, output):
+            output = str(output).lower().strip()
+            if output != "20":
+                return CheckResult.wrong("The program cannot process a big amount of numbers.")
+            return "10 20 30 40 50 -10 -20 -30 -40"
+
+        # a big amount of number
+        def test_2_6(self, output):
+            output = str(output).lower().strip()
+            if output != "50":
+                return CheckResult.wrong("The program cannot process a large number of numbers.")
+            return "3 -2 -1"
+
+        # zero sum
+        def test_2_7(self, output):
+            output = str(output).lower().strip()
+            if output != "0":
+                return CheckResult.wrong("The problem when sum is equal to 0 has occurred")
+            self.on_exit = 1
+            return "/exit"
+
+        def check(self, reply: str, attach) -> CheckResult:
+            if self.on_exit:
+                reply = reply.strip().lower().split('\n')
+                self.on_exit = False
+                if 'bye' not in reply[-1]:
+                    return CheckResult.wrong("Your program didn't print \"bye\" after entering \"/exit\".")
+                else:
+                    return CheckResult.correct()
+            else:
+                return CheckResult.wrong("The program ended prematurely")
+
+
+    if __name__ == '__main__':
+        CalcTest("calculator.calculator").run_tests()
+  learner_created: false
+- name: calculator/calculator.py
+  visible: true
+  text: |-
+    import sys
+    import math
+
+    usage_notes = """
+    1. Session prompts:
+        1. n: New session
+        2. c: Current session
+
+    2. Supported operators: +, -, *, /, ^, !
+
+    3. Precedence:
+        1. Parenthesization
+        2. Factorial
+        3. Exponentiation
+        4. Multiplication and Divison
+        5. Addition and Subtraction
+
+    4. Use of identifiers is supported. Use commas to separate them:
+        n: a=10,b=5
+        c: a+b
+        -> 15
+
+    5. Result of the previous expression can accessed by using the 'r'
+    identifier:
+        n: 2+3
+        -> 5
+        c: r+10
+        -> 15
+
+    6. Special commands:
+        1. n: Stars a new session. Deletes all previous identifiers.
+        2. q: Quits the program
+    """
+
+    identifiers = {}
+
+
+    def start():
+        # Creates a prompt dictionary to differentiate sessions.
+        # Starts the main loop of the program.
+        # Takes the input from the user and calls controller().
+
+        # prompts = {
+        #     'n': 'n: ',
+        #     'c': 'c: ',
+        # }
+
+        # prompt = prompts['n']
+        while True:
+            expr = input()
+            if expr.startswith('/'):
+                if expr == '/exit':
+                    print('Bye!')
+                    break
+                elif expr == '/help':
+                    print("A calculator class that implements basic calculator functions."
+                          "Calculator will also store variables in latin-character only strings.")
+                    continue
+                else:
+                    print("Unknown command")
+                    continue
+            elif expr == '':
+                continue
+            # if expr == 'n':
+            #     # prompt = prompts['n']
+            #     identifiers.clear()
+            else:
+                # res = controller(expr)
+                if '=' in expr:
+                    # expr_list = expr.replace(' ', '').split(',')
+                    # for stmt in expr_list:
+                    #     var, val = stmt.split('=')
+                    #     identifiers[var] = val
+                    # return 'i'
+                    # return create_identifiers(expr)
+                    variable, value = expr.replace(' ', '').split(sep='=', maxsplit=1)
+                    if has_number(variable):
+                        print('Invalid identifier')
+                        continue
+                    if value in identifiers:
+                        another_variable = value
+                        identifiers[variable] = identifiers[another_variable]
+                    else:
+                        try:
+                            identifiers[variable] = int(value)
+                        except ValueError:
+                            if has_number(value):
+                                print('Invalid assignment')
+                            else:
+                                print('Unknown variable')
+                        continue
+                elif ('+' in expr) or ('-' in expr) or ('*' in expr) \
+                        or ('/' in expr) or ('**' in expr) or ('^' in expr):
+                    try:
+                        postfix_expr = get_postfix(expr)
+                        print(postfix_eval(postfix_expr))
+                    except:
+                        print('Invalid expression')
+                    continue
+                # else:
+                #     variable = expr.replace(' ', '')
+                #
+                #     if has_number(variable):
+                #         print('Invalid identifier')
+                #         continue
+                #
+                #     elif variable in identifiers:
+                #         print(identifiers[variable])
+                #
+                #     else:
+                #         print('Unknown variable')
+                #         continue
+                # return postfix_eval(postfix_expr)
+                # if res == 'e':
+                #
+                #     print('Invalid expression')
+                # elif res == 'i':
+                #     pass
+                    # prompt = prompts['c']
+                # else:
+                #     print( identifiers['r'])
+                    # prompt = prompts['c']
+
+    def controller(expr):
+        # Calls create_identifiers or passes the expr to get_postfix()
+        # to be converted into a postfix expression list. And, calls
+        # postfix_eval() for evaluation. All the Exceptions
+        # are terminated, so the main loop keeps running.
+
+        # try:
+        global postfix_expr
+        if '=' in expr:
+            # expr_list = expr.replace(' ', '').split(',')
+            # for stmt in expr_list:
+            #     var, val = stmt.split('=')
+            #     identifiers[var] = val
+            # return 'i'
+            # return create_identifiers(expr)
+            variable, value = expr.replace(' ', '').split(sep='=', maxsplit=1)
+            if has_number(variable):
+               print('Invalid identifier')
+               # continue
+            if value in identifiers:
+                another_variable = value
+                identifiers[variable] = identifiers[another_variable]
+            else:
+                try:
+                    identifiers[variable] = int(value)
+                except ValueError:
+                    if has_number(value):
+                        print('Invalid assignment')
+                    else:
+                        print('Unknown variable')
+                # continue
+        elif ('+' in expr) or ('-' in expr) or ('*' in expr)\
+                or ('/' in expr) or ('**' in expr) or ('^' in expr):
+             postfix_expr = get_postfix(expr)
+        return postfix_eval(postfix_expr)
+        # except Exception:
+        #     return 'e'
+
+    def has_number(string):
+        return any(char.isdigit() for char in string)
+
+    def create_identifiers(expr):
+        # Identifiers are implemented as a global dictionary. First,
+        # the string is split using ',' as a delimiter. The resulting
+        # substring are separated using '='. First substring is assigned
+        # as a key with second substring as the value.
+
+        expr_list = expr.replace(' ', '').split(',')
+
+        for stmt in expr_list:
+            var, val = stmt.split('=')
+            identifiers[var] = val
+        return 'i'
+
+    def get_postfix(expr):
+        # Converts infix expressions to postfix expressions to remove ambiguity.
+        # Example: a+b*c -> abc*+
+
+        # Remove all the spaces in the given expression.
+        expr = expr.replace(' ', '')
+        sep_str = ''
+
+        # Insert spaces only around supported operators, so splitting
+        # can be done easily later.
+        for a_char in expr:
+            if a_char in '+-*/^!()':
+                sep_str += ' %s ' % a_char
+            else:
+                sep_str += a_char
+
+        # Use the default space as the delimiter and split the string.
+        token_list = sep_str.split()
+
+        # Only operators are pushed on to the op_stack, digits and identifiers
+        # are appended to the postfix_list.
+        op_stack = []
+        postfix_list = []
+
+        prec = {}
+        prec['!'] = 5
+        prec['^'] = 4
+        prec['/'] = 3
+        prec['*'] = 3
+        prec['+'] = 2
+        prec['-'] = 2
+        prec['('] = 1
+
+        # The current operator's precedence in the loop is compared with the
+        # operators in the stack. If it's higher, it's pushed on the stack.
+
+        # If it less than or equal, the operators are popped until the
+        # precedence of the operator at the top is less than the
+        # current operators'.
+
+        # When parentheses are used, ')' forces all the operators above '('
+        # to be popped.
+
+        # Whenever an operator is popped it's appended to the postfix_list.
+        for token in token_list:
+            if isnum(token) or token.isalpha():
+                postfix_list.append(token)
+            elif token == '(':
+                op_stack.append(token)
+            elif token == ')':
+                top_token = op_stack.pop()
+                while top_token != '(':
+                    postfix_list.append(top_token)
+                    top_token = op_stack.pop()
+            else:
+                while op_stack != [] and \
+                        (prec[op_stack[-1]] >= prec[token]):
+                    postfix_list.append(op_stack.pop())
+                op_stack.append(token)
+
+        while op_stack != []:
+            postfix_list.append(op_stack.pop())
+
+        return postfix_list
+
+    def postfix_eval(postfix_list):
+        # Similar stack based approach is used here for evaluation. If a
+        # identifier or digit is found, push it on the operand_stack. If
+        # an operator is found, use it on the last two operands or the last
+        # in case of '!', and append the result on the stack.
+
+        operand_stack = []
+
+        for val in postfix_list:
+            if isnum(val):
+                operand_stack.append(float(val))
+            elif val.isalpha():
+                val = identifiers[val]
+                operand_stack.append(float(val))
+            elif val in '+-*/^!':
+
+                if val != '!':
+                    op2 = operand_stack.pop()
+                    op1 = operand_stack.pop()
+                    res = calc(op1, val, op2)
+                    operand_stack.append(res)
+                else:
+                    op = operand_stack.pop()
+                    res = math.factorial(op)
+                    operand_stack.append(res)
+
+        res = operand_stack[-1]
+        int_res = int(res)
+        if int_res == res:
+            res = int_res
+        print(str(res))
+        # identifiers['r'] = str(res)
+
+    def isnum(val):
+        # Used as a helper function to check if the argument is a number.
+        try:
+            float(val)
+            return True
+        except Exception:
+            return False
+
+    def calc(op1, op, op2):
+        # Performs the operation on the operands and returns the result.
+        if op == '+':
+            return op1 + op2
+        elif op == '-':
+            return op1 - op2
+        elif op == '*':
+            return op1 * op2
+        elif op == '/':
+            return op1 / op2
+        elif op == '^':
+            return op1 ** op2
+
+    if sys.argv[-1] == 'n':
+        print(usage_notes)
+
+    start()
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/74/stages/411/implement
+status: Solved
+record: 5

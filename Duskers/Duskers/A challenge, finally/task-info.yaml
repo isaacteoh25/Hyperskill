@@ -1,0 +1,182 @@
+type: edu
+files:
+- name: duskers/duskers.py
+  visible: true
+  text: |
+    # Write your code here
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |-
+    from hstest.stage_test import StageTest
+    from hstest.test_case import TestCase
+    from hstest.check_result import CheckResult
+
+    usernames = "hyper_user", "hyper", "hyper_test", "hyper_test", "hyper_test"
+    menu_options = "ex", "save", "up", "m"
+    tests = {}
+
+
+    tests_robot_count = (3, 4, 1, 2, 3)
+    tests_titanium = ("359", "30059", "300059", "300059", "288059")
+
+    class DuskersTest(StageTest):
+        test = 0
+        locations = 0
+        last_scan = None
+        exploration_titanium = None
+
+        def generate(self):
+            """Things that are checked:
+            1. Does the 'show encounter rate' upgrade work, is it still available after saving and re-loading game.
+            2. Does the game handle our save file. Is all information properly loaded in the game: player name, titanium balance, the number displayed robots
+            3. Is upgrade sale prevented if player doesn't have enough titanium
+            4. Does the displayed titanium amount on the exploration screen match the amount the player gets from exploring, is it added to the balance.
+               This is done dynamically, command line args are no longer used to compensate implementation differences.
+            5. Are the player stats saved to high scores after game is over."""
+            test2 = [f"load\n1\nup\n1\nup\n2\nex"] + [(10, self.func1), self.func2, "back\nex"] * 10 + [(10, self.func1), self.func2,
+                     "exit"]
+            test4 = [f"load\n1\nup\n1\nup\n2\nsave\n2\nm\nmain\nload\n2\nex"] +[(10, self.func1), self.func2, "back\nex"] * 5 + [(10, self.func1), self.func2,
+                     "menu\nload\n1\nup\n1\nup\n2\nup\n3\nsave\n3\nm\nexit"]
+            return [TestCase(stdin=[f"load\n1\nup\n1\n2\nback\nex\n1", self.func3, "exit"],
+                             files={"save_file.txt": "hyper_user Titanium: 359 Robots: 3 Last save: 2020-10-06 15:23"}),
+                    TestCase(stdin=test2, files={"save_file.txt": "hyper Titanium: 30059 Robots: 4 Last save: 2020-10-06 15:23"}),
+                    TestCase(stdin=[f"load\n1\nup\n1\nup\n2\nex", (10, self.func4), self.func2, (10, self.func4), self.func2,
+                                    (10, self.func4), self.func2,  (10, self.func4), self.func2, "m\nmain\nhigh", self.func5, "exit"],
+                             files={"save_file.txt": "hyper_test Titanium: 300059 Robots: 1 Last save: 2020-10-06 15:23"}),
+                    TestCase(stdin=test4, files={"save_file.txt": "hyper_test Titanium: 300059 Robots: 2 Last save: 2020-10-06 15:23"})]
+
+        def func1(self, output):
+            """The minimising function, test will keep searching for new locations until the game displays a 'back' option
+               Then it selects the location with the lowest encounter rate (visibility from upgrades)
+               Saves the titanium amount from exploration to be compared in func2"""
+            output = output.lower().split("\n")
+            scan = output[-16:]
+            enc_rates = []
+            titanium_amounts = []
+            for line in scan:
+                if "back" in line:
+                    for line2 in self.last_scan:
+                        if "%" in line2:
+                            titanium_index = line2.lower().index("titanium") + 10
+                            titanium_amounts.append(line2[titanium_index:titanium_index + 2])
+                            perc_index = line2.index("%")
+                            enc_rates.append(int(line2[perc_index-2:perc_index].strip()))
+                        else:
+                            if "%" not in "".join(self.last_scan):
+                                return CheckResult.wrong("Upgrade not displaying encounter rate.")
+                    min_rate = 100
+                    min_location = 1
+                    for count, item in enumerate(enc_rates):
+                        if item <= min_rate:
+                            min_rate = item
+                            min_location = count + 1
+                            self.exploration_titanium = titanium_amounts[count]
+                    return str(min_location)
+
+            for line in scan:
+                if "s" in line:
+                    self.locations += 1
+                    self.last_scan = scan
+                    return "s"
+            return "back"
+
+        def func2(self, output):
+            """Checks if titanium balance if properly added after exploration"""
+            if str(int(tests_titanium[self.test]) + int(self.exploration_titanium)) not in output:
+                CheckResult.wrong("Wrong titanium balance after exploration")
+            return "m"
+
+        def func3(self, output):
+            """Checks for illegal sale of upgrades"""
+            if "%" in output:
+                return CheckResult.wrong("Upgrade sale should not be possible if titanium balance is lower than item price.")
+            return "m"
+
+        def func4(self, output):
+            """The minimising function, works in sam way as func1, except it finds and chooses the highest encounter rate
+            Used to get a game over. Repeated 3 times to get an almost certain game over, if not enough more can be added."""
+            output = output.lower().split("\n")
+            scan = output[-16:]
+            enc_rates = []
+            titanium_amounts = []
+            for line in scan:
+                if "back" in line:
+                    for line2 in self.last_scan:
+                        if "%" in line2:
+                            titanium_index = line2.lower().index("titanium") + 10
+                            titanium_amounts.append(line2[titanium_index:titanium_index + 2])
+                            perc_index = line2.index("%")
+                            enc_rates.append(int(line2[perc_index - 2:perc_index].strip()))
+                    max_rate = 0
+                    max_location = 1
+                    for count, item in enumerate(enc_rates):
+                        if item >= max_rate:
+                            max_rate = item
+                            max_location = count + 1
+                            self.exploration_titanium = titanium_amounts[count]
+                    return str(max_location)
+
+            for line in scan:
+                if "s" in line:
+                    self.locations += 1
+                    self.last_scan = scan
+                    return "s"
+            return "back"
+
+        def func5(self, output):
+            if usernames[self.test] not in output or str(int(tests_titanium[self.test]) - 2000) not in output:
+                return CheckResult.wrong("Player statistics not displayed in high score screen or encounter algorithm is incorrect")
+            return "back"
+
+
+        def check(self, reply, attach):
+            """General test checking if information from save was loaded and displayed properly"""
+            if "\n" not in reply:
+                return CheckResult.wrong("Output too short")
+            user_output = reply.split("\n")
+            text = "".join(user_output).lower()
+            robot_count = tests_robot_count[self.test]
+            for count, line in enumerate(user_output):
+                if usernames[self.test] in line.lower():
+                    break
+            else:
+                return CheckResult.wrong("Player name not displayed on save slot")
+            user_output_part2 = user_output[count:]
+            for count2, line2 in enumerate(user_output_part2):
+                if count2 == 0:
+                    continue
+                if usernames[self.test] in line2.lower():
+                    break
+            else:
+                return CheckResult.wrong("Player name greeted after loading the game")
+            user_output_part2 = user_output_part2[count2:]
+            text_part2 = "".join(user_output_part2)
+            for count, line in enumerate(user_output_part2):
+                if "║" in line:
+                    break
+            else:
+                return CheckResult.wrong("Please make sure your HUB begins with a '║' character for testing.\nRobot images should start in the line just under this character.")
+            if len(user_output_part2) < count + 9:
+                return CheckResult.wrong("Hub not displayed properly, look at the examples for help.")
+            robots = user_output_part2[count+1: count+8]
+            for line in robots:
+                robot_length = len(line) // robot_count
+                robots_check = [line[robot_length * n:robot_length * (n + 1)] for n in range(robot_count)]
+                print(robots_check)
+                if robots_check.count(robots_check[0]) != robot_count:
+                    return CheckResult.wrong("Robots were incorrectly displayed in the HUB.")
+            if tests_titanium[self.test] not in text:
+                CheckResult.wrong("Titanium input from file not displayed in save slot")
+            if tests_titanium[self.test] not in text_part2:
+                CheckResult.wrong("Titanium amount not displayed properly after loading game")
+            self.test += 1
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        DuskersTest('duskers.duskers').run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/136/stages/729/implement#comment
+status: Unchecked
+record: -1

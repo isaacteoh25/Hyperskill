@@ -1,0 +1,79 @@
+type: edu
+files:
+- name: duskers/duskers.py
+  visible: true
+  text: |
+    # Write your code here
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |-
+    from hstest.stage_test import StageTest
+    from hstest.test_case import TestCase
+    from hstest.check_result import CheckResult
+
+    usernames = "hyper", "hyper_test", "hyper_user"
+
+    class DuskersTest(StageTest):
+        test = 0
+        def generate(self):
+            return [TestCase(stdin=f"play\n{usernames[0]}\nyes"), TestCase(stdin=f"PLAY\n{usernames[1]}\nno\nno\nyes"), TestCase(stdin="exit"), TestCase(stdin="high\nback\nhelp"), TestCase(stdin=f"play\n{usernames[2]}\nmain\nmenu\nexit")]  # however many test cases needed
+
+        def check(self, reply, attach):
+            if "\n" not in reply:
+                return CheckResult.wrong("Output too short")
+            user_output = reply.split("\n")
+            text = "".join(user_output).lower()
+            if len(user_output) < 12:
+                return CheckResult.wrong("Output too short. Your title should take up exactly 8 lines (including blank space),\n"
+                                         "then the main menu options should be displayed on separate lines")
+
+            title = "".join(user_output[:8])
+            if "play" not in user_output[8].lower():
+                return CheckResult.wrong("Play option should be right underneath the title, which should take up exactly 8 lines.")
+            if "high" not in user_output[9].lower():
+                return CheckResult.wrong("High scores option should be right under [Play].")
+            if "help" not in user_output[10].lower():
+                return CheckResult.wrong("Help option should be right under [High] scores")
+            if "exit" not in user_output[11].lower():
+                return CheckResult.wrong("Exit option should be right under [Help].")
+            if self.test in (0, 1):
+                if usernames[self.test] not in "".join(user_output):
+                    return CheckResult.wrong("Player not greeted personally.")
+            if self.test == 0:
+                if text.count("yes") != 1:
+                    return CheckResult.wrong("Player not asked if he/she is ready to begin.\nRemember to display possible commands for player to choose from")
+            if self.test == 1:
+                if "yes" not in text:
+                    return CheckResult.wrong("Player not asked if he/she is ready to begin.\nRemember to display possible commands for player to choose from")
+                if text.count("yes") != 3:
+                    return CheckResult.wrong("You must keep asking the player if they are ready until they choose [Yes]")
+            if self.test == 3:
+                if "no scores" not in text:
+                    return CheckResult.wrong("Make sure to print out 'No scores' on the high scores screen.")
+                if "back" not in text:
+                    return CheckResult.wrong("No back option displayed on high score screen.")
+                else:
+                    split_point = text.index("back")
+                    text_part2 = text[split_point:]
+                    if title not in text_part2:
+                        return CheckResult.wrong("Make sure the whole menu including the title is displayed again after returning to main menu.")
+            if self.test == 4:
+                split_point = text.index("menu")
+                text_part2 = text[split_point:]
+                if title not in text_part2:
+                    return CheckResult.wrong("Make sure the whole menu including the title is displayed again after returning to main menu.")
+
+            self.test += 1
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        DuskersTest('duskers.duskers').run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/136/stages/725/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Mon, 01 Mar 2021 08:43:10 UTC
+record: 2

@@ -1,0 +1,95 @@
+<h2>Description</h2>
+
+<p>In this stage, we will focus on how to display what you have found to a user in a readable form. We need to create a context window for any token for this. A context window is the token's environment, in other words, other tokens on the left and right. There can be a lot of them — two or ten. The goal is to immediately show a context window for each position in the list. For example, we have a line: <code class="java">John and Mary are students and they live in London</code>. You want to create a context window for <code class="java">in</code> with one token on the left and right. The result is a context window that has:</p>
+
+<ul>
+	<li>The <code class="java">John and Mary are students and they live in London</code> line. It is important to include the whole line for the next steps, where you will extend the borders of the window to match the sentence's borders. If the token is the first/last in the file, there is no need to move to the next/previous line to fill the context window;</li>
+	<li>The position of the token, for example, <code class="java">0, 41, 43</code>;</li>
+	<li>The indexes of the context window borders, where the first index is the start of the first token in the window, <code class="java">live</code> in our case and the end of the last token in the window, <code class="java">London</code>.</li>
+</ul>
+
+<p>The context window may include more than one sentence; if the word was the last in the sentence with the window size of 4, then include a part of the next sentence.</p>
+
+<h2>Objectives</h2>
+
+<p>Write a program that creates a context window for a token. Later, you will be able to run this function several times for each token that needs a window. For now, the program should:</p>
+
+<ol>
+	<li>Take a folder with files as an input, iterate over it, read the data from the input about the position of a token and the size of the window for each file; the filenames, the positions of the tokens, and the window sizes are placed in one input string and are separated by semicolumns, for example, <code class="java">testfile1.txt;0,0,6;2</code>. Note that if the window size is 0, the program should return an empty string.</li>
+	<li>Find the line with the token and tokenize the line from left to right and vise versa. It is done to find the positions of the neighboring tokens, depending on the window size.</li>
+	<li>Remember the beginning and the end of the window.</li>
+	<li>Write down the positions in the nested list, for example, <code class="java">[[0, 0, 6]]</code>. There can be several tokens in the context window if the request consists of more than one word. It will also be required for the next stages.</li>
+	<li>Print the context window as a string, where all attributes of the window are separated from each other by the <code class="java">|</code> symbol; see more examples below.</li>
+</ol>
+
+<p>Don't forget to test your program. Check whether your program works when:</p>
+
+<ul>
+	<li>The token is the first/last in a line;</li>
+	<li>There are empty lines in the file;</li>
+	<li>There is no such token in the file.</li>
+</ul>
+
+<p>Clear the database immediately after indexing.</p>
+
+<h2>Examples</h2>
+
+<p>The greater-than symbol followed by a space (<code class="java">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+
+<p>During tests, you are given a test directory. Input is a folder path, where you need to find and process all text files. Your program should take this path and iterate over files. Clear your database after each test.</p>
+
+<p><strong>Example 1</strong>: <em>The token is first, the window size is two</em></p>
+
+<p>Folder contents: <em>testfile1.txt</em></p>
+
+<p><em>testfile1.txt </em>contents:<br>
+<code class="java">Spring had come early that year.</code></p>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">&gt; tests/stage4/ex1
+&gt; testfile1.txt;0,0,6;2
+Spring had come early that year.|[[0, 0, 6]]|0|15</code></pre>
+
+<p><strong>Example 2</strong>: <em>The token is in the middle of the string, the window size is one</em></p>
+
+<p>Folder contents: <em>testfile2.txt</em></p>
+
+<p><em>testfile2.txt </em>contents:</p>
+
+<pre><code class="language-no-highlight">Spring had come early that year.
+He had come on tuesday night.</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">&gt; ex2
+&gt; testfile2.txt;1,7,11;1
+He had come on tuesday night.|[[1, 7, 11]]|3|14</code></pre>
+
+<p><strong>Example 3</strong>: <em>The token is the last in the string, the window size is three</em></p>
+
+<p>Folder contents: <em>testfile3.txt</em></p>
+
+<p><em>testfile3.txt </em>contents:<br>
+<code class="java">Spring had come early that year.</code></p>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">&gt; ex3
+&gt; testfile3.txt;0,27,31;3
+Spring had come early that year.|[[0, 27, 31]]|11|31</code></pre>
+
+<p><strong>Example 4</strong>: <em>The window size is zero</em></p>
+
+<p>Folder contents: <em>testfile4.txt</em></p>
+
+<p><em>testfile4.txt </em>contents:<br>
+<code class="java">You can always tell weather by sunsets.</code></p>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">&gt; ex4
+&gt; testfile4.txt;0,15,19;0
+
+
+</code></pre>

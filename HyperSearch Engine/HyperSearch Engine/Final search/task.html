@@ -1,0 +1,91 @@
+<h2>Description</h2>
+
+<p>Welcome to the final stage of the project!</p>
+
+<p>You need to take the attached <a target="_blank" href="https://stepik.org/media/attachments/lesson/383392/tests.rar" rel="noopener noreferrer nofollow">folder</a> and make a new database. In previous stages, the files and databases you created were for educational purposes, they served only to check your program. Now, it's time to create a real search engine with real-world text files. In this case, you will work with short stories of Jerome Klapka Jerome. Note that indexing the database may take a while because the files are much bigger than in all previous stages.</p>
+
+<p>In this stage, perform a search in this new database. Also, you need a function that searches for a query in the database and returns the pairs — <code class="language-html">filename: contexts with the query words</code> in string format. You already know how to adjust the number of documents using limit and offset, now you need to do the same with <strong>quotes</strong> in the files. By quotes, we understand sentences from the indexed files that contain the query words.</p>
+
+<p>As a result, your search should return a limited number of documents starting from the document offset, and also a limited number of quotes, starting from the quotes offset. Note that limits and offsets for documents and quotes are different!</p>
+
+<h2>Objectives</h2>
+
+<p>Your search at this stage should:</p>
+
+<ol>
+	<li>Take a query, a window size, a limit, and an offset, and a list of pairs (a limit, an offset) for quotes in documents as input; for example, you want to find the word <code class="language-html">'man'</code> , with limit=3, offset=0. You want three quotes starting from the first and the window size is one, so the input would look like this: <code class="language-html">query='man', window_size=1, limit=3, offset=0, pairs=[(3,0),(3,0),(3,0)]</code>;</li>
+	<li>Implement the second function from the previous stage and get a dictionary with context windows;</li>
+	<li>Take the corresponding pair (limit, offset) from the list for each file, and if the pair is missing, use the default values — limit=3, offset=0. Once the interface is done, users will be able to use them as default values if they do not want to set their own.</li>
+	<li>Take the required number of quotes from the document according to the limit and offset. Be careful, the offset should be more or equal to 0! Otherwise, set the offset to 0 automatically. If the limit is bigger than the total amount of files you have, set the limit to the number of documents. At the same time, if the limit is 0, no results should be displayed,</li>
+	<li> Highlight the keywords in bold for each quote,</li>
+	<li> Return the resulting dictionary, which will look like this <code class="language-html">{'filename_one.txt': [quote0, quote1, quote2, ...], 'filename_two.txt': [quote0, quote1, quote2], 'filename_three.txt': ..., ...}</code>.</li>
+	<li>Print the results in the following manner:
+	<pre><code class="language-no-highlight">filename 1
+ 1.Line 1
+ 2.Line 2
+ 3.Line 3
+
+filename 2
+ 1.Line 1
+ 2.Line 2
+ 3.Line 3</code></pre>
+	</li>
+</ol>
+
+<h2>Examples</h2>
+
+<p>The greater-than symbol followed by a space (<code class="language-html">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+
+<p>You are working with large texts, so we show only the inputs and outputs.</p>
+
+<p>During tests, you are given a folder; there are 4 files with a story in each.</p>
+
+<p>Folder contents:<em> </em><em>story_one.txt</em>, <em>story_two.txt</em>, <em>story_three.txt</em>, <em>story_four.txt</em>.</p>
+
+<p><strong>Example 1</strong>: <em>The limit is bigger than the total amount of files in the database</em></p>
+
+<pre><code class="language-html">&gt; ex
+&gt; 'George';1;3;0;1,0;1,0;2,0
+story_one.txt
+1. We found ourselves short of water at Hambledon Lock; so we took our jar and went up to the lock-keeper’s house to beg for some. &lt;b&gt;George&lt;/b&gt; was our spokesman.
+story_three.txt
+1. &lt;b&gt;George&lt;/b&gt; raised his hat, and said “Good-morning.” He hoped, in answer to his politeness, to hear the polite “Welcome to our shop,” as this was the answer in the conversation book.
+story_two.txt
+1. We had made the tea, and were just settling down comfortably to drink it, when &lt;b&gt;George&lt;/b&gt;, with his cup half-way to his lips, paused and exclaimed: “What’s that?”
+2. “Why that!” said &lt;b&gt;George&lt;/b&gt;, looking westward.</code></pre>
+
+<p><strong>Example 2</strong>: <em>Different limits and offsets for each document</em></p>
+
+<p>This example demonstrates the functionality of limits: you would have printed the results for all four files, but since the limit is set to 3, you need only three first outputs.</p>
+
+<pre><code class="language-html">&gt; ex
+&gt; 'Hambledon Lock';2;3;0;1,0;2,0;1,0
+story_one.txt
+1. We found ourselves short of water at &lt;b&gt;Hambledon&lt;/b&gt; &lt;b&gt;Lock&lt;/b&gt;; so we took our jar and went up to the lock-keeper’s house to beg for some.</code></pre>
+
+<p><strong>Example 3</strong>: <em>One result in one file</em></p>
+
+<pre><code class="language-html">&gt; ex
+&gt; 'water';3;4;0;3,0;1,0;2,0;4,0
+story_four.txt
+1. I drank them neat for six consecutive days, and they nearly killed me; but after then I adopted the plan of taking a stiff glass of brandy-and-&lt;b&gt;water&lt;/b&gt; immediately on the top of them, and found much relief thereby.
+2. I have been informed since, by various eminent medical gentlemen, that the alcohol must have entirely counteracted the effects of the chalybeate properties contained in the &lt;b&gt;water&lt;/b&gt;. I am glad I was lucky enough to hit upon the right thing.
+story_one.txt
+1. We found ourselves short of &lt;b&gt;water&lt;/b&gt; at Hambledon Lock; so we took our jar and went up to the lock-keeper’s house to beg for some.
+story_two.txt
+1. We tried river &lt;b&gt;water&lt;/b&gt; once, later on in the season, but it was not a success.
+2. Our jar was empty, and it was a case of going without our tea or taking &lt;b&gt;water&lt;/b&gt; from the river.</code></pre>
+
+<p><strong>Example 4</strong>: <em>The word does not exist</em></p>
+
+<pre><code class="language-no-highlight">&gt; ex
+&gt; 'Count Dracula';2;4;1;2,0;2,0;3,0;1,0
+
+</code></pre>
+
+<p><strong>Example 5</strong>: <em>The limit is zero</em></p>
+
+<pre><code class="language-no-highlight">&gt; ex
+&gt; 'Scarlett';4;0;0;1,0;5,0;3,0;1,0
+
+</code></pre>

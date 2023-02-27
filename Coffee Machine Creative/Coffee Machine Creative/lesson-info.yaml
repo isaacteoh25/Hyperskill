@@ -1,0 +1,9 @@
+type: framework
+content:
+- Hello, coffee_
+- Machines have needs
+- Enough coffee for everyone
+- Action_
+- On a coffee loop
+- New functions
+current_task: 0

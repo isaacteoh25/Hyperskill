@@ -1,0 +1,12 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: import nltk
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/12162#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Fri, 05 Feb 2021 09:11:06 UTC
+record: -1

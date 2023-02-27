@@ -1,0 +1,42 @@
+type: edu
+files:
+- name: tests.py
+  visible: false
+  text: "from hstest.stage_test import *\nfrom hstest.test_case import TestCase\n\n\
+    CheckResult.correct = lambda: CheckResult(True, '')\nCheckResult.wrong = lambda\
+    \ feedback: CheckResult(False, feedback)\n\nMIN_DATA_STR_LEN = 100\nINSTRUCTION\
+    \ = 'Print a random string containing 0 or 1'\n\n\nclass GenRandTest(StageTest):\n\
+    \    def generate(self) -> List[TestCase]:\n        return [TestCase(stdin=[\"\
+    1010101101010\",\n                                \"1010100111001010010101001010100001010001\"\
+    ,\n                                '01010000100101011010001001000101011101000101010010100101'],\n\
+    \                         attach=109),\n                TestCase(stdin=[\"1010101101010_some_wrong_symbols\"\
+    ,\n                                \"1010100111001010010101001010100001010001_some_more_wrong_symbols\"\
+    ,\n                                '01010000100101011010001001000101011101000101010010100101'],\n\
+    \                         attach=109)\n                ]\n\n    def check(self,\
+    \ output: str, attach) -> CheckResult:\n        strings = [s for s in output.split('\\\
+    n') if s != '']\n        \n        if not strings:\n            return CheckResult.wrong(\"\
+    The output seems to be empty.\")\n\n        instructions = strings[0]\n      \
+    \  data_string = strings[-1]\n\n        if INSTRUCTION.lower() not in instructions.lower():\n\
+    \            return CheckResult.wrong('Please give instructions to user in the\
+    \ form \"{}\"'.format(INSTRUCTION))\n        if len(data_string) < MIN_DATA_STR_LEN:\n\
+    \            return CheckResult.wrong('Data string is too short, it should have\
+    \ length >={}'.format(MIN_DATA_STR_LEN))\n        if len(data_string) != attach:\n\
+    \            return CheckResult.wrong(\"The string \\\"{}\\\" of your output is\
+    \ supposed to contain the final data string. \\n\"\n                         \
+    \            \"However, it contains wrong number of symbols\".format(data_string))\n\
+    \        \n        if [s for s in data_string if s not in \"10\"]:\n         \
+    \   return CheckResult.wrong(\"Wrong symbols are found in the final data string.\"\
+    )\n\n        return CheckResult.correct()\n\n\nif __name__ == '__main__':\n  \
+    \  GenRandTest('predictor.predictor').run_tests()\n"
+  learner_created: false
+- name: predictor/predictor.py
+  visible: true
+  text: |
+    print('Hello, World!')
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/156/stages/813/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Thu, 18 Feb 2021 01:45:44 UTC
+record: 1
