@@ -1,0 +1,41 @@
+11/22/2020 03:33:13 PM ↩ Input the action (add, remove, import, export, ask, exit, log, hardest card, reset stats):
+11/22/2020 03:33:18 PM ↪ import
+11/22/2020 03:33:18 PM ↩ File name:
+11/22/2020 03:33:20 PM ↪ deck.json
+11/22/2020 03:33:20 PM ↩ 3 cards have been loaded.
+11/22/2020 03:33:20 PM ↩ Input the action (add, remove, import, export, ask, exit, log, hardest card, reset stats):
+11/22/2020 03:33:27 PM ↪ add
+11/22/2020 03:33:27 PM ↩ The card:
+11/22/2020 03:33:34 PM ↩ The card 'Japan' already exists.
+11/22/2020 03:33:34 PM ↩ The card:
+11/22/2020 03:33:49 PM ↪ Argentina
+11/22/2020 03:33:49 PM ↩ The definition of the card:
+11/22/2020 03:33:51 PM ↪ Buenos Aires
+11/22/2020 03:33:51 PM ↩ The pair ('Argentina':'Buenos Aires') has been added.
+11/22/2020 03:33:51 PM ↩ Input the action (add, remove, import, export, ask, exit, log, hardest card, reset stats):
+11/22/2020 03:34:06 PM ↪ hardest card
+11/22/2020 03:34:06 PM ↩ The hardest card is 'Russia'. You have 5 errors answering it.
+11/22/2020 03:34:06 PM ↩ Input the action (add, remove, import, export, ask, exit, log, hardest card, reset stats):
+11/22/2020 03:34:15 PM ↪ export
+11/22/2020 03:34:15 PM ↩ File name:
+11/22/2020 03:34:19 PM ↪ deck.json
+11/22/2020 03:34:19 PM ↩ 4 cards have been saved.
+11/22/2020 03:34:19 PM ↩ Input the action (add, remove, import, export, ask, exit, log, hardest card, reset stats):
+11/22/2020 03:34:24 PM ↪ ask
+11/22/2020 03:34:24 PM ↩ How many times to ask?
+11/22/2020 03:34:27 PM ↪ 4
+11/22/2020 03:34:27 PM ↩ Print the definition of Russia
+11/22/2020 03:34:30 PM ↩ Correct!
+11/22/2020 03:34:30 PM ↩ Print the definition of print
+11/22/2020 03:34:37 PM ↩ Wrong. The right answer is 'outputs file to the console'
+11/22/2020 03:34:37 PM ↩ Print the definition of Russia
+11/22/2020 03:34:40 PM ↩ Correct!
+11/22/2020 03:34:40 PM ↩ Print the definition of print
+11/22/2020 03:34:42 PM ↩ Wrong. The right answer is 'outputs file to the console'
+11/22/2020 03:34:42 PM ↩ Input the action (add, remove, import, export, ask, exit, log, hardest card, reset stats):
+11/22/2020 03:35:02 PM ↪ reset stats
+11/22/2020 03:35:02 PM ↩ Card statistics have been reset.
+11/22/2020 03:35:02 PM ↩ Input the action (add, remove, import, export, ask, exit, log, hardest card, reset stats):
+11/22/2020 03:35:05 PM ↪ log
+11/22/2020 03:35:05 PM ↩ File name:
+11/22/2020 03:35:08 PM ↪ log.log

@@ -1,0 +1,18 @@
+import
+flashcards.json
+5 cards have been loaded
+ask
+2
+Print the definition of "casa":
+parada
+Correct!
+Print the definition of "carro":
+parado
+Wrong. The right answer is "anda".
+hardest card
+The hardest cards is "carro". You have 1 errors answering it.
+export
+flashcards.json
+5 cards have been saved.
+log
+log.txt

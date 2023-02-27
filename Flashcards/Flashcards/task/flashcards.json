@@ -1,0 +1,40 @@
+{
+    "flashcards": {
+        "cat": {
+            "def": "meow",
+            "mistake_number": 0
+        },
+        "dog": {
+            "def": "woof",
+            "mistake_number": 0
+        },
+        "horse": {
+            "def": "neigh",
+            "mistake_number": 0
+        },
+        "Canada": {
+            "def": "Ottawa",
+            "mistake_number": 0
+        },
+        "Japan": {
+            "def": "Tokyo",
+            "mistake_number": 0
+        },
+        "Poland": {
+            "def": "Warsaw",
+            "mistake_number": 0
+        },
+        "Texas": {
+            "def": "Austin",
+            "mistake_number": 0
+        },
+        "Florida": {
+            "def": "Tallahassee",
+            "mistake_number": 0
+        },
+        "California": {
+            "def": "Sacramento",
+            "mistake_number": 0
+        }
+    }
+}
