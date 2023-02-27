@@ -1,0 +1,19 @@
+type: code
+custom_name: Match or not match?
+files:
+- name: task.py
+  visible: true
+  text: |-
+    import re
+
+
+    def matched(template, string):
+        ...
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/9474
+status: Solved
+feedback:
+  message: <html>Correct solution<br/><br/>Continue on <a href="https://hyperskill.org/learn/step/9474">JetBrains
+    Academy</a></html>
+  time: Tue, 11 Aug 2020 04:48:19 UTC
+record: -1

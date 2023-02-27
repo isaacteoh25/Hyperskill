@@ -1,0 +1,17 @@
+<h2>Searching in a descending-sorted list</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Write a program that finds the left-most position of a target element in a descending-sorted list.</p> 
+  <p><strong>Input:</strong> the first line contains a descending-sorted list of numbers separated by spaces. The second line contains a target element.</p> 
+  <p><strong>Output:</strong> the left-most position of the target element in the list or $-1$ if the target element is not found.</p> 
+  <p>Note that this problem can be easily solved using a <code class="java">for</code> loop, but we ask you to implement the algorithm so that you understand it better!</p> 
+  <p><button class="btn-sm btn-outline-secondary" onclick="getElementById('hint-559').style.display='inline'"> Hint </button> </p>
+  <div id="hint-559" style="display:none;">
+   You need to modify the behavior of the algorithm in the case when the middle element equals 
+   <code class="java">target</code>. Instead of returning the index, you need to call the method again.
+  </div>
+  <p></p>
+ </body>
+</html><br><b>Sample Input:</b><br><pre><code class="language-no-highlight">5 5 4 4 4 4 3 2 1<br>4</code></pre><br><b>Sample Output:</b><br><pre><code class="language-no-highlight">2</code></pre><br><br><br><font color="gray">Memory limit: 512 MB</font><br><font color="gray">Time limit: 3 seconds</font><br><br>
+<a href="https://hyperskill.org/learn/step/7562">Show topic summary</a>
