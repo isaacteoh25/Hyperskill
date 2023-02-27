@@ -1,0 +1,285 @@
+type: edu
+custom_name: stage2
+files:
+- name: tests.py
+  visible: false
+  text: |
+    from hstest.stage_test import *
+    from hstest.test_case import TestCase
+    from enum import Enum
+    from typing import List, Optional
+    from copy import deepcopy
+
+    CheckResult.correct = lambda: CheckResult(True, '')
+    CheckResult.wrong = lambda feedback: CheckResult(False, feedback)
+
+
+    class FieldState(Enum):
+        X = 'X'
+        O = 'O'
+        FREE = ' '
+
+
+    def get_state(symbol):
+        if symbol == 'X':
+            return FieldState.X
+        elif symbol == 'O':
+            return FieldState.O
+        elif symbol == ' ' or symbol == '_':
+            return FieldState.FREE
+        else:
+            return None
+
+
+    class TicTacToeField:
+
+        def __init__(self, *, field: str = '', constructed=None):
+
+            if constructed is not None:
+                self.field = deepcopy(constructed)
+
+            else:
+                self.field: List[List[Optional[FieldState]]] = [
+                    [None for _ in range(3)] for _ in range(3)
+                ]
+
+                for row in range(3):
+                    for col in range(3):
+                        index = (2 - row) * 3 + col
+                        self.field[row][col] = get_state(field[index])
+
+        def equal_to(self, other) -> bool:
+            for i in range(3):
+                for j in range(3):
+                    if self.field[i][j] != other.field[i][j]:
+                        return False
+            return True
+
+        def has_next_as(self, other) -> bool:
+            improved: bool = False
+            for i in range(3):
+                for j in range(3):
+                    if self.field[i][j] != other.field[i][j]:
+                        if self.field[i][j] == FieldState.FREE and not improved:
+                            improved = True
+                        else:
+                            return False
+            return improved
+
+        def differ_by_one(self, other) -> bool:
+            have_single_difference = False
+            for i in range(3):
+                for j in range(3):
+                    if self.field[i][j] != other.field[i][j]:
+                        if have_single_difference:
+                            return False
+                        have_single_difference = True
+            return have_single_difference
+
+        def is_close_to(self, other) -> bool:
+            return (
+                self.equal_to(other)
+                or self.has_next_as(other)
+                or other.has_next_as(self)
+            )
+
+        @staticmethod
+        def parse(field_str: str):
+
+            lines = field_str.splitlines()
+            lines = [i.strip() for i in lines]
+            lines = [i for i in lines if
+                     i.startswith('|') and i.endswith('|')]
+
+            for line in lines:
+                if len(line) != 9:
+                    raise WrongAnswerException(
+                        f"Line of Tic-Tac-Toe field should be 9 characters long\n"
+                        f"found {len(line)} characters in \"{line}\"")
+                for c in line:
+                    if c not in 'XO|_ ':
+                        return None
+
+            field: List[List[Optional[FieldState]]] = [
+                [None for _ in range(3)] for _ in range(3)
+            ]
+
+            y: int = 2
+
+            for line in lines:
+                cols = line[2], line[4], line[6]
+                x: int = 0
+                for c in cols:
+                    state = get_state(c)
+                    if state is None:
+                        return None
+                    field[y][x] = state
+                    x += 1
+                y -= 1
+
+            return TicTacToeField(constructed=field)
+
+        @staticmethod
+        def parse_all(output: str):
+            fields = []
+
+            lines = output.splitlines()
+            lines = [i.strip() for i in lines]
+            lines = [i for i in lines if len(i) > 0]
+
+            candidate_field = ''
+            inside_field = False
+            for line in lines:
+                if '----' in line and not inside_field:
+                    inside_field = True
+                    candidate_field = ''
+                elif '----' in line and inside_field:
+                    field = TicTacToeField.parse(candidate_field)
+                    if field is not None:
+                        fields += [field]
+                    inside_field = False
+
+                if inside_field and line.startswith('|'):
+                    candidate_field += line + '\n'
+
+            return fields
+
+
+    inputs = [
+        "1 1", "1 2", "1 3",
+        "2 1", "2 2", "2 3",
+        "3 1", "3 2", "3 3"
+    ]
+
+
+    def iterate_cells(initial: str) -> str:
+        index: int = -1
+        for i in range(len(inputs)):
+            if initial == inputs[i]:
+                index = i
+                break
+
+        if index == -1:
+            return ''
+
+        full_input: str = ''
+        for i in range(index, index + 9):
+            full_input += inputs[i % len(inputs)] + '\n'
+
+        return full_input
+
+
+    class TicTacToeTest(StageTest):
+        def generate(self) -> List[TestCase]:
+            tests: List[TestCase] = []
+
+            i: int = 0
+            for input in inputs:
+                full_move_input = iterate_cells(input)
+
+                str_nums = input.split()
+                x = int(str_nums[0])
+                y = int(str_nums[1])
+
+                if i % 2 == 1:
+                    full_move_input = f'4 {i}\n' + full_move_input
+
+                full_game_input = ''
+                for _ in range(9):
+                    full_game_input += full_move_input
+
+                tests += [
+                    TestCase(
+                        stdin=full_game_input,
+                        attach=(x, y)
+                    )
+                ]
+
+                i += 1
+
+            return tests
+
+        def check(self, reply: str, attach: str) -> CheckResult:
+
+            clue_x, clue_y = attach
+
+            fields = TicTacToeField.parse_all(reply)
+
+            if len(fields) == 0:
+                return CheckResult.wrong(
+                    "No fields found"
+                )
+
+            for i in range(1, len(fields)):
+                curr: TicTacToeField = fields[i - 1]
+                next: TicTacToeField = fields[i]
+
+                stayed = curr.equal_to(next)
+                improved = curr.has_next_as(next)
+
+                if not (stayed or improved):
+                    return CheckResult.wrong(
+                        "For two fields following each " +
+                        "other one is not a continuation " +
+                        "of the other (they differ more than in two places)."
+                    )
+
+            if "Making move level \"easy\"" not in reply:
+                return CheckResult.wrong(
+                    "No \"Making move level \"easy\"\" line in output"
+                )
+
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        TicTacToeTest('tictactoe.tictactoe').run_tests()
+  learner_created: false
+- name: tictactoe/tictactoe.py
+  visible: true
+  text: "\n# write your code here\ndef print_game(a):\n    print(\"---------\")\n\
+    \    print(\"|\", \" \".join(a[0:3]), \"|\", sep=\" \")\n    print(\"|\", \" \"\
+    .join(a[3:6]), \"|\", sep=\" \")\n    print(\"|\", \" \".join(a[6:9]), \"|\",\
+    \ sep=\" \")\n    print(\"---------\")\n\n\nx_win = 0\no_win = 0\narea = 0\n\n\
+    def count_wins(a):\n    global x_win\n    global o_win\n    global area\n    if\
+    \ a[0]==' ' or a[1]==' ' or a[2]==' ' or a[3]==' ' or a[4]==' ' or a[5]==' ' or\
+    \ a[6]==' ' or a[7]==' ' or a[8]==' ':\n        area += 1 \n    horizontal_win\
+    \ = [a[0] + a[1] + a[2], a[3] + a[4] + a[5],\\\n        a[6] + a[7] + a[8]]\n\
+    \    vertical_win = [a[0] + a[3] + a[6], a[1] + a[4] + a[7],\\\n        a[2] +\
+    \ a[5] + a[8]]\n    diagonal_win = [a[0] + a[4] + a[8], a[2] + a[4] + a[6]]\n\
+    \    if 'XXX' in horizontal_win or 'XXX' in diagonal_win or 'XXX' in vertical_win:\n\
+    \        x_win += 1\n    elif 'OOO' in horizontal_win or 'OOO' in diagonal_win\
+    \ or 'OOO' in vertical_win:\n        o_win += 1\n    # elif '_'  in horizontal_win:\
+    \ \n    #     area += 1\ndef play_game(a):\n    move_count = 0\n    x_num = 0\n\
+    \    o_num = 0\n    coord_grid = [13, 23, 33, 12, 22, 32, 11, 21, 31]\n    while\
+    \ x_win == 0 and o_win == 0 and move_count < 9:\n        user_coord = input(\"\
+    Enter the coordinates:\")\n        remove_space = user_coord.replace(\" \", \"\
+    \")\n        if remove_space.isdigit():\n            int_coord = int(remove_space)\n\
+    \            if int_coord == 13 or int_coord == 23 or int_coord == 33 or int_coord\
+    \ == 12 or\\\n                int_coord == 22 or int_coord == 32 or int_coord\
+    \ == 11 or int_coord == 21 or\\\n                int_coord == 31:\n          \
+    \      index = coord_grid.index(int_coord)\n                if a[index] == 'X'or\
+    \ a[index] == 'O':\n                    print(\"This cell is occupied! Choose\
+    \ another one!\")\n                    continue\n                else:\n     \
+    \               for i in range(0, 9):\n                        if a[i] == 'X':\n\
+    \                            x_num += 1\n                        if a[i] == 'O':\n\
+    \                            o_num += 1\n                    # if move_count %\
+    \ 2 == 0:\n                    if x_num >  o_num:\n                        a[index]\
+    \ = 'O'\n                        move_count += 1\n                        print_game(a)\n\
+    \                        count_wins(a)\n                        break\n      \
+    \              elif x_num <=  o_num:\n                        a[index] = 'X'\n\
+    \                        move_count += 1\n                        print_game(a)\n\
+    \                        count_wins(a)\n                        break\n      \
+    \              else:\n                        break\n            else:\n     \
+    \           print(\"Coordinates should be from 1 to 3!\")\n                continue\n\
+    \        else:\n            print(\"You should enter numbers!\")\n           \
+    \ continue\n\n\ndef results():\n    if x_win == 1:\n        print(\"X wins\")\n\
+    \    elif o_win == 1:\n        print(\"O wins\")\n    elif area == 1:\n      \
+    \  \n        print(\"Game not finished\") \n    else:                     \n \
+    \       print(\"Draw\")\n\n# board = [\" \", \" \", \" \", \" \", \" \", \" \"\
+    , \" \", \" \", \" \"]\nuser_input = input(\"Enter cells\")\nboard= list(user_input.replace('_',\
+    \ \" \"))\nprint_game(board)\nplay_game(board)\nresults()        \t\t\t\t\t\t"
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/82/stages/453/implement
+status: Solved
+record: 2
