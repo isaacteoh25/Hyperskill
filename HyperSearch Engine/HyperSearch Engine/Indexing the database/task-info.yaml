@@ -1,0 +1,155 @@
+type: edu
+files:
+- name: engine.py
+  visible: true
+  text: |
+    # write your code here
+  learner_created: false
+- name: test/files/ex1/testfile1.txt
+  visible: false
+  text: |
+    student
+  learner_created: false
+- name: test/files/ex2/testfile2.txt
+  visible: false
+  text: |
+    John is @ student
+  learner_created: false
+- name: test/files/ex2/testfile3.txt
+  visible: false
+  text: |
+    Mary loves John
+  learner_created: false
+- name: test/files/ex3/testfile4.txt
+  visible: false
+  text: |
+    Her true self was poorly concealed. Her eyes were her own.
+  learner_created: false
+- name: test/files/ex4/testfile5.txt
+  visible: false
+  learner_created: false
+- name: test/indexer.py
+  visible: false
+  text: "\"\"\"\nIndexator\nThis module performs indexing of a text in a given file\n\
+    \"\"\"\nfrom test.tokenizator import Tokenizator\nfrom functools import total_ordering\n\
+    import os\n\n\n@total_ordering\nclass Position_Plus(object):\n    \"\"\"\n   \
+    \ Class Position\n    Cointains positions of each token\n    \"\"\"\n\n    def\
+    \ __init__(self, lnumber, start, end):\n        \"\"\"\n        @param start:\
+    \ position on the 1st element of a token\n        @param end: position on the\
+    \ last element of a token\n        @param lnumber: number of a line in a given\
+    \ text\n        \"\"\"\n        \n        self.start = start\n        self.end\
+    \ = end\n        self.lnumber = lnumber\n        \n    def __eq__(self, position):\n\
+    \n        return self.lnumber == position.lnumber and self.start == position.start\
+    \ and self.end == position.end \n\n    def __lt__(self, other_pos):\n        '''\n\
+    \        This function compares two positions, i.e. their parameters\n       \
+    \ and returns the result of this comparison\n        @param other_pos: position\
+    \ that is to be compared with self\n        @return: comparison_result, i.e. True\
+    \ or False if one position less than another\n        '''\n        return ((self.lnumber\
+    \ < other_pos.lnumber)\n                or ((self.lnumber == other_pos.lnumber)\n\
+    \                and (self.start < other_pos.start)))\n\n    def __repr__(self):\n\
+    \n        return str(self.lnumber) + ', '+ str(self.start) + ', ' + str(self.end)\n\
+    \        \n        \nclass Indexer_Dict(object):\n\n    def __init__(self):\n\
+    \        \n        self.tokenizator = Tokenizator()\n    \n    def get_index_dict_dir(self,\
+    \ filedir):\n        output_dict = {}\n        for filename in os.listdir(filedir):\n\
+    \            filepath = os.path.join(filedir, filename)\n            f = open(filepath)\n\
+    \            for lnumber, line in enumerate(f):\n                if not line:\n\
+    \                    lnumber+=1\n                for token in self.tokenizator.token_gen(line):\n\
+    \                    start = token.position\n                    end = start +\
+    \ len(token.s)\n                    pos = Position_Plus(lnumber, start, end)\n\
+    \                    output_dict.setdefault(token.s, {}).setdefault(filename,\
+    \ []).append([pos])\n                lnumber+=1\n            f.close()\n     \
+    \   return output_dict\n\n    def get_formated_result_dir(self, filedir):\n  \
+    \      result = self.get_index_dict_dir(filedir)\n        return result\n"
+  learner_created: false
+- name: test/tokenizator.py
+  visible: false
+  text: "import unicodedata\n\"\"\"\nTokenizator\nThis module performs the morphological\
+    \ analyses of a text and extracts tokens\n\"\"\"\nclass Token_Type(object):\n\
+    \    \"\"\"\n    Class of tokens taken from a given text\n    \"\"\"\n    def\
+    \ __init__(self,s,tp,position):\n        \"\"\"\n        Consrtuctor for token.\n\
+    \        @param self: self is an odject(here:token) with attributes\n        @param\
+    \ s: s is a string view of a token\n        @param tp: tp is a type of a token\n\
+    \        @return: token with it's type\n        \"\"\"\n        self.s=s\n   \
+    \     self.tp=tp\n        self.position=position\n        \n    def __repr__(self):\n\
+    \        \"\"\"\n        The way the programm returns the final result.\n    \
+    \    \"\"\"\n        return self.s+ '_' + self.tp+'_'+ str(self.position)\n  \
+    \  \n    \nclass Tokenizator(object):\n    \"\"\"\n    Class that returns tokens\n\
+    \    \"\"\"\n           \n    @staticmethod\n    def tokens_type_definition(x):\n\
+    \       \"\"\"\n       This is a static method, which defines a type of a token\n\
+    \       @return: type of a token\n       \"\"\"\n       tp = 'type' \n       if\
+    \ x.isalpha():\n           tp = 'alpha'\n       if x.isdigit():\n           tp\
+    \ = 'digit'\n       if x.isspace():\n           tp = 'space'\n       if unicodedata.category(x)[0]\
+    \ == 'P':\n           tp = 'punct'\n       return tp\n\n    def tokens_generator(self,\
+    \ stream):\n        \"\"\"\n        This is a generator.\n        @param stream:stream\
+    \ is a text given\n        @return: tokens from the given text plus their type\n\
+    \        \"\"\"\n        if  not isinstance(stream, str):\n            raise ValueError('Input\
+    \ has an unappropriate type, it should be str')\n        position=0\n        tp_of_c=self.tokens_type_definition(stream[0])\n\
+    \        for i,c in enumerate(stream):\n            if i>0 and self.tokens_type_definition(c)\
+    \ != tp_of_c:\n                tp = tp_of_c\n                tp_of_c = self.tokens_type_definition(c)\n\
+    \                s = stream[position:i]\n                t = Token_Type(s,tp,position)\
+    \  \n                position = i\n                yield(t)    \n        tp =\
+    \ self.tokens_type_definition(c)\n        s = stream[position:i+1]\n        t\
+    \ = Token_Type(s,tp,position)\n        yield(t)\n\n    def token_gen(self, stream):\n\
+    \        token_string = ''\n        for token in self.tokens_generator(stream):\n\
+    \            if token.tp == 'alpha' or token.tp == 'digit':\n                yield\
+    \ token\n\n    def token_gen_format(self, stream):\n        token_string = ''\n\
+    \        for token in self.tokens_generator(stream):\n            if token.tp\
+    \ == 'alpha' or token.tp == 'digit':\n                token_format = token.s+'_'+token.tp+'_'+\
+    \ str(token.position)\n                token_string+= token_format+'\\n'\n   \
+    \     return token_string\n"
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |
+    from hstest.stage_test import *
+    from hstest.test_case import TestCase
+    from test.indexer import Indexer_Dict
+    import re
+    import os
+
+    CheckResult.correct = lambda: CheckResult(True, '')
+    CheckResult.wrong = lambda feedback: CheckResult(False, feedback)
+    x = Indexer_Dict()
+
+    dir_1 = os.path.join('test', 'files', 'ex1')
+    dir_2 = os.path.join('test', 'files', 'ex2')
+    dir_3 = os.path.join('test', 'files', 'ex3')
+    dir_4 = os.path.join('test', 'files', 'ex4')
+
+
+    class SearchTest(StageTest):
+        def generate(self):
+            return [TestCase(stdin=dir_1, attach=x.get_formated_result_dir(dir_1)),
+                    TestCase(stdin=dir_2, attach=x.get_formated_result_dir(dir_2)),
+                    TestCase(stdin=dir_3, attach=x.get_formated_result_dir(dir_3)),
+                    TestCase(stdin=dir_4, attach=x.get_formated_result_dir(dir_4))]
+
+        def check(self, reply: str, clue: Any) -> CheckResult:
+            reply = reply.strip()
+            reply = re.sub(r"['\"]", "", reply)
+
+            for key, value in clue.items():
+                if key not in reply:
+                    return CheckResult.wrong("Seems like one of the tokens is missing.\n"
+                                             f"Token {key} was not found in your output.")
+                expected_line = f"{key}: {str(value)}"
+                expected_line = re.sub(r"['\"]", "", expected_line)
+                if expected_line not in reply:
+                    return CheckResult.wrong(f"Token position \"{expected_line}\" was expected in the output,\n"
+                                             f"but was not found.")
+
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        SearchTest().run_tests()
+  learner_created: false
+- name: test/__init__.py
+  visible: false
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/168/stages/870/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Fri, 02 Apr 2021 07:15:21 UTC
+record: 2
