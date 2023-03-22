@@ -1,0 +1,16 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: |-
+    def sort_names(names):
+        """Sort names by length in descending order."""
+        ...
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/7717#comment
+status: Solved
+feedback:
+  message: <html>Correct solution<br/><br/>Continue on <a href="https://hyperskill.org/learn/step/7717#comment">JetBrains
+    Academy</a></html>
+  time: Wed, 25 Nov 2020 08:51:47 UTC
+record: -1

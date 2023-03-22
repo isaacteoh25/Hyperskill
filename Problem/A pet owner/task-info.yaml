@@ -1,0 +1,26 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: |-
+    class TestPetOwner(unittest.TestCase):
+
+        def setUp(self):
+            # write your code here
+
+        def test_add(self):
+            self.assertEqual(self.pet_owner.owner_with_pet(), 'Polly has a parrot named Joshy')
+            self.pet_owner.spec = 'dog'
+            self.assertEqual(self.pet_owner.owner_with_pet(), 'Polly has a dog named Joshy')
+
+
+    if __name__ == '__main__':
+        unittest.main()
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/11273#comment
+status: Solved
+feedback:
+  message: <html>Correct solution<br/><br/>Continue on <a href="https://hyperskill.org/learn/step/11273#comment">JetBrains
+    Academy</a></html>
+  time: Mon, 02 Nov 2020 02:59:11 UTC
+record: -1

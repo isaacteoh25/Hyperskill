@@ -1,0 +1,26 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: "lib = shelve.open(\"my_library\", writeback=False)\nlib[\"Divergent trilogy\"\
+    ] = [\"Divergent\", \"Insurgent\", \"\tAllegiant\"]\nlib[\"The Lord of the Rings\"\
+    ] = [\"The Fellowship of the Ring\", \"The Two Towers\", \"The Return of the King\"\
+    , \"The Silmarillion\"]\n\n# write your code here\n\n\nprint(len(lib[\"The Lord\
+    \ of the Rings\"]))\n\nlib.close()"
+  learner_created: false
+- name: my_library.dat
+  visible: true
+  learner_created: true
+- name: my_library.bak
+  visible: true
+  learner_created: true
+- name: my_library.dir
+  visible: true
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/11345#comment
+status: Solved
+feedback:
+  message: <html>Correct solution<br/><br/>Continue on <a href="https://hyperskill.org/learn/step/11345#comment">JetBrains
+    Academy</a></html>
+  time: Mon, 09 Nov 2020 03:28:18 UTC
+record: -1

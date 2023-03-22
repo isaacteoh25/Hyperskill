@@ -1,0 +1,23 @@
+type: code
+files:
+- name: task.py
+  visible: true
+  learner_created: false
+- name: sums.txt
+  visible: true
+  learner_created: true
+- name: names.txt
+  visible: true
+  learner_created: true
+- name: animals
+  visible: true
+  learner_created: true
+- name: animals.txt
+  visible: true
+  learner_created: true
+- name: new_animals.txt
+  visible: true
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/8076
+status: Solved
+record: -1
